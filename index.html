@@ -1,0 +1,3008 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DAFZZ INTELLIGENCE</title>
+<style>
+    :root {
+        --primary: #7c3aed;
+        --primary-light: #a78bfa;
+        --primary-soft: #ede9fe;
+        --pink: #ec4899;
+        --pink-soft: #fce7f3;
+        --yellow: #fbbf24;
+        --yellow-soft: #fef3c7;
+        --green: #10b981;
+        --green-soft: #d1fae5;
+        --blue: #3b82f6;
+        --blue-soft: #dbeafe;
+        --orange: #f97316;
+        --bg-main: #faf5ff;
+        --bg-gradient: linear-gradient(135deg, #faf5ff 0%, #fdf2f8 50%, #eff6ff 100%);
+        --card-bg: #ffffff;
+        --text-main: #1f2937;
+        --text-sub: #6b7280;
+        --accent-red: #ef4444;
+        --shadow: 0 10px 25px -5px rgba(124, 58, 237, 0.25);
+        --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.06);
+        --radius-lg: 24px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    button, .nav-item, .tab-btn, .tool-card, header, .bottom-nav, .modal-title, .icon-badge, .chip {
+        user-select: none;
+    }
+
+    html, body {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    body {
+        background: var(--bg-gradient);
+        background-attachment: fixed;
+        color: var(--text-main);
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+    }
+
+    #fx-canvas {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.5;
+    }
+
+    .app-container {
+        width: 100%;
+        max-width: 480px;
+        height: 100vh;
+        height: 100dvh;
+        background: var(--bg-gradient);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        z-index: 1;
+    }
+
+    @media (min-width: 600px) {
+        body {
+            align-items: center;
+            padding: 20px;
+        }
+        .app-container {
+            height: 90vh;
+            max-height: 850px;
+            border-radius: 28px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.05);
+        }
+    }
+
+    #splash {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, #7c3aed 0%, #ec4899 50%, #fbbf24 100%);
+        background-size: 200% 200%;
+        animation: gradientMove 4s ease infinite;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        cursor: pointer;
+        transition: opacity 0.5s ease;
+    }
+
+    @keyframes gradientMove {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    .splash-logo {
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255,255,255,0.4);
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: pulse 1.5s infinite ease-in-out;
+        box-shadow: 0 0 60px rgba(255,255,255,0.5);
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.12); }
+    }
+
+    .splash h2 { margin-top: 20px; font-weight: 800; font-size: 1.5rem; letter-spacing: 1px; }
+    .splash p { font-size: 0.75rem; opacity: 0.9; margin-top: 8px; }
+
+    header {
+        padding: 16px 18px 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(90deg, rgba(255,255,255,0.6) 0%, rgba(237,233,254,0.8) 50%, rgba(252,231,243,0.6) 100%);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(124,58,237,0.1);
+        position: relative;
+        z-index: 5;
+        flex-shrink: 0;
+    }
+
+    .user-profile { display: flex; align-items: center; gap: 12px; }
+
+    .avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #7c3aed, #ec4899, #fbbf24);
+        background-size: 200% 200%;
+        animation: gradientMove 3s ease infinite;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 800;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+        position: relative;
+    }
+
+    .user-info h2 { font-size: 1rem; font-weight: 800; color: var(--text-main); }
+    .user-info p { font-size: 0.72rem; color: var(--text-sub); font-weight: 600; margin-top: 2px; display: flex; align-items: center; gap: 6px; }
+
+    .xp-badge {
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        color: white;
+        padding: 3px 8px;
+        border-radius: 8px;
+        font-weight: 800;
+        font-size: 0.65rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        box-shadow: 0 2px 6px rgba(251,191,36,0.4);
+    }
+
+    .content-area {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 14px 18px 30px;
+        scroll-behavior: smooth;
+        position: relative;
+        z-index: 2;
+    }
+
+    .content-area::-webkit-scrollbar { width: 4px; }
+    .content-area::-webkit-scrollbar-thumb {
+        background: rgba(124, 58, 237, 0.3); border-radius: 2px;
+    }
+
+    .view { display: none; }
+    .view.active {
+        display: block;
+        animation: fadeSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes fadeSlideIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+        background: var(--card-bg);
+        border-radius: var(--radius-md);
+        padding: 16px;
+        margin-bottom: 14px;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid rgba(124,58,237,0.06);
+        transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+    }
+
+    .card-main {
+        background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+        background-size: 200% 200%;
+        animation: gradientMove 5s ease infinite;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        border: none;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(124,58,237,0.4);
+    }
+
+    .card-main::before {
+        content: '';
+        position: absolute;
+        inset: -50%;
+        background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 70%);
+        animation: shine 4s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    @keyframes shine {
+        0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.3; }
+        50% { transform: scale(1.2) rotate(180deg); opacity: 0.6; }
+    }
+
+    .grad-cap {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        animation: capFloat 3s ease-in-out infinite;
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+        z-index: 2;
+    }
+
+    @keyframes capFloat {
+        0%, 100% { transform: translateY(0) rotate(-10deg) scale(1); }
+        50% { transform: translateY(-10px) rotate(10deg) scale(1.1); }
+    }
+
+    .card-main h2 {
+        font-size: 1.5rem;
+        margin-top: 6px;
+        font-weight: 800;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+        position: relative;
+    }
+
+    .card-main p {
+        font-size: 0.75rem;
+        opacity: 0.95;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        position: relative;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .stat-card {
+        background: var(--card-bg);
+        border-radius: var(--radius-md);
+        padding: 14px 10px;
+        text-align: center;
+        box-shadow: var(--shadow-sm);
+        border-top: 3px solid;
+        transition: transform 0.25s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card:hover { transform: translateY(-4px) scale(1.02); }
+    .stat-card.streak { border-top-color: #f97316; background: linear-gradient(135deg, #fff 0%, #fff7ed 100%); }
+    .stat-card.exam { border-top-color: #3b82f6; background: linear-gradient(135deg, #fff 0%, #eff6ff 100%); }
+
+    .stat-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        margin-bottom: 6px;
+        color: white;
+    }
+
+    .stat-icon.streak { background: linear-gradient(135deg, #f97316, #ea580c); animation: emojiBounce 2s ease-in-out infinite; }
+    .stat-icon.exam { background: linear-gradient(135deg, #3b82f6, #2563eb); animation: emojiBounce 2s ease-in-out infinite 0.3s; }
+
+    @keyframes emojiBounce {
+        0%, 100% { transform: translateY(0) rotate(0); }
+        25% { transform: translateY(-4px) rotate(-8deg); }
+        75% { transform: translateY(-4px) rotate(8deg); }
+    }
+
+    .fun-strip {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 14px;
+        overflow-x: auto;
+        padding: 4px 0 8px;
+    }
+    .fun-strip::-webkit-scrollbar { height: 3px; }
+    .fun-strip::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.3); border-radius: 2px; }
+
+    .fun-pill {
+        padding: 10px 14px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        white-space: nowrap;
+        color: white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        animation: floatY 4s ease-in-out infinite;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .fun-pill:nth-child(1) { background: linear-gradient(135deg, #ec4899, #db2777); animation-delay: 0s; }
+    .fun-pill:nth-child(2) { background: linear-gradient(135deg, #3b82f6, #2563eb); animation-delay: 0.5s; }
+    .fun-pill:nth-child(3) { background: linear-gradient(135deg, #fbbf24, #f59e0b); animation-delay: 1s; color: #78350f; }
+    .fun-pill:nth-child(4) { background: linear-gradient(135deg, #10b981, #059669); animation-delay: 1.5s; }
+    .fun-pill:nth-child(5) { background: linear-gradient(135deg, #8b5cf6, #7c3aed); animation-delay: 2s; }
+
+    @keyframes floatY {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-3px); }
+    }
+
+    .mood-card {
+        background: linear-gradient(135deg, #fef3c7 0%, #fce7f3 50%, #dbeafe 100%);
+        border-radius: var(--radius-md);
+        padding: 16px;
+        margin-bottom: 14px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(251,191,36,0.3);
+    }
+
+    .mood-title {
+        font-size: 0.7rem;
+        font-weight: 800;
+        color: #78350f;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .mood-text {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-top: 8px;
+        line-height: 1.4;
+    }
+
+    .schedule-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        margin-bottom: 8px;
+        background: white;
+        box-shadow: var(--shadow-sm);
+        transition: transform 0.2s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .schedule-item::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        width: 5px;
+    }
+
+    .schedule-item:hover { transform: translateX(4px); }
+
+    .schedule-item.senin::before { background: #ef4444; }
+    .schedule-item.selasa::before { background: #f97316; }
+    .schedule-item.rabu::before { background: #fbbf24; }
+    .schedule-item.kamis::before { background: #10b981; }
+    .schedule-item.jumat::before { background: #3b82f6; }
+    .schedule-item.sabtu::before { background: #8b5cf6; }
+
+    .schedule-day-badge {
+        width: 44px; height: 44px; border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 800; font-size: 0.7rem; color: white; flex-shrink: 0;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .senin .schedule-day-badge { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .selasa .schedule-day-badge { background: linear-gradient(135deg, #f97316, #ea580c); }
+    .rabu .schedule-day-badge { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+    .kamis .schedule-day-badge { background: linear-gradient(135deg, #10b981, #059669); }
+    .jumat .schedule-day-badge { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .sabtu .schedule-day-badge { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+    .schedule-content { flex: 1; }
+    .schedule-content h4 { font-size: 0.88rem; font-weight: 800; margin-bottom: 3px; }
+    .schedule-content p { font-size: 0.72rem; color: var(--text-sub); line-height: 1.4; }
+
+    .calendar-container {
+        background: white;
+        border-radius: var(--radius-md);
+        padding: 14px;
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 14px;
+    }
+
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .calendar-title {
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: var(--primary);
+    }
+
+    .calendar-nav { display: flex; gap: 6px; }
+    .calendar-nav button {
+        width: 30px; height: 30px; border-radius: 10px;
+        border: none; background: var(--primary-soft);
+        color: var(--primary); font-weight: 800; cursor: pointer;
+        font-size: 0.9rem; transition: all 0.2s;
+    }
+    .calendar-nav button:hover { background: var(--primary); color: white; transform: scale(1.1); }
+
+    .calendar-weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 3px; margin-bottom: 6px;
+    }
+
+    .calendar-weekdays div {
+        text-align: center; font-size: 0.7rem; font-weight: 800;
+        color: var(--text-sub); padding: 4px 0;
+    }
+
+    .calendar-weekdays div.sun { color: #ef4444; }
+    .calendar-weekdays div.sat { color: #3b82f6; }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 3px;
+    }
+
+    .calendar-day {
+        aspect-ratio: 1;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.75rem; font-weight: 700;
+        border-radius: 8px; cursor: default;
+        position: relative; transition: transform 0.15s;
+    }
+
+    .calendar-day:hover { transform: scale(1.15); }
+    .calendar-day.other { color: #d1d5db; }
+    .calendar-day.today {
+        background: linear-gradient(135deg, #7c3aed, #ec4899);
+        color: white;
+        box-shadow: 0 3px 10px rgba(124,58,237,0.5);
+        animation: todayPulse 2s infinite;
+    }
+    @keyframes todayPulse {
+        0%, 100% { box-shadow: 0 3px 10px rgba(124,58,237,0.5); }
+        50% { box-shadow: 0 3px 20px rgba(124,58,237,0.8); }
+    }
+    .calendar-day.libur {
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        color: #b91c1c;
+        border: 1px solid #f87171;
+    }
+    .calendar-day.ulangan {
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        color: #92400e;
+        border: 1px solid #fbbf24;
+    }
+
+    .calendar-legend {
+        display: flex; gap: 12px; margin-top: 10px;
+        flex-wrap: wrap; font-size: 0.68rem; color: var(--text-sub);
+        font-weight: 600;
+    }
+    .calendar-legend span { display: flex; align-items: center; gap: 4px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+    .legend-dot.libur { background: linear-gradient(135deg, #fee2e2, #fecaca); border: 1px solid #f87171; }
+    .legend-dot.ulangan { background: linear-gradient(135deg, #fef3c7, #fde68a); border: 1px solid #fbbf24; }
+    .legend-dot.today { background: linear-gradient(135deg, #7c3aed, #ec4899); }
+
+    .grid-tools {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .tool-card {
+        border-radius: var(--radius-md);
+        padding: 14px;
+        display: flex; flex-direction: column; gap: 8px;
+        cursor: pointer;
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s;
+        border: none; position: relative; overflow: hidden;
+        color: white; animation: toolPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .tool-card:nth-child(1) { animation-delay: 0.03s; }
+    .tool-card:nth-child(2) { animation-delay: 0.06s; }
+    .tool-card:nth-child(3) { animation-delay: 0.09s; }
+    .tool-card:nth-child(4) { animation-delay: 0.12s; }
+    .tool-card:nth-child(5) { animation-delay: 0.15s; }
+    .tool-card:nth-child(6) { animation-delay: 0.18s; }
+    .tool-card:nth-child(7) { animation-delay: 0.21s; }
+    .tool-card:nth-child(8) { animation-delay: 0.24s; }
+    .tool-card:nth-child(9) { animation-delay: 0.27s; }
+    .tool-card:nth-child(10) { animation-delay: 0.30s; }
+    .tool-card:nth-child(11) { animation-delay: 0.33s; }
+    .tool-card:nth-child(12) { animation-delay: 0.36s; }
+    .tool-card:nth-child(13) { animation-delay: 0.39s; }
+    .tool-card:nth-child(14) { animation-delay: 0.42s; }
+    .tool-card:nth-child(15) { animation-delay: 0.45s; }
+    .tool-card:nth-child(16) { animation-delay: 0.48s; }
+    .tool-card:nth-child(17) { animation-delay: 0.51s; }
+    .tool-card:nth-child(18) { animation-delay: 0.54s; }
+
+    @keyframes toolPop {
+        from { opacity: 0; transform: scale(0.7) translateY(20px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .tool-card::before {
+        content: '';
+        position: absolute; top: -50%; left: -50%;
+        width: 200%; height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.35) 0%, transparent 60%);
+        transform: translateX(-100%);
+        transition: transform 0.7s;
+        pointer-events: none;
+    }
+
+    .tool-card:hover::before { transform: translateX(100%); }
+
+    .tool-card:hover {
+        transform: translateY(-6px) scale(1.04);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    }
+
+    .tool-card:active { transform: scale(0.96); }
+
+    .tool-card svg { filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); transition: transform 0.3s; }
+    .tool-card:hover svg { transform: scale(1.15) rotate(-5deg); }
+    .tool-card h4 { font-size: 0.82rem; font-weight: 800; }
+
+    .tool-card[data-tool="kalkulator"] { background: linear-gradient(135deg, #667eea, #764ba2); }
+    .tool-card[data-tool="pomodoro"]   { background: linear-gradient(135deg, #f093fb, #f5576c); }
+    .tool-card[data-tool="flashcard"]  { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+    .tool-card[data-tool="konverter"]  { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #064e3b; }
+    .tool-card[data-tool="periodik"]   { background: linear-gradient(135deg, #fa709a, #fee140); color: #78350f; }
+    .tool-card[data-tool="pdf"]        { background: linear-gradient(135deg, #30cfd0, #330867); }
+    .tool-card[data-tool="katakata"]   { background: linear-gradient(135deg, #a8edea, #fed6e3); color: #2d3436; }
+    .tool-card[data-tool="stopwatch"]  { background: linear-gradient(135deg, #ff9a9e, #fecfef); color: #2d3436; }
+    .tool-card[data-tool="rumus"]      { background: linear-gradient(135deg, #ffecd2, #fcb69f); color: #2d3436; }
+    .tool-card[data-tool="tabungan"]   { background: linear-gradient(135deg, #ff6a88, #ff99ac); }
+    .tool-card[data-tool="papan"]      { background: linear-gradient(135deg, #21d4fd, #b721ff); }
+    .tool-card[data-tool="rak"]        { background: linear-gradient(135deg, #08aeea, #2af598); color: #064e3b; }
+    .tool-card[data-tool="piket"]      { background: linear-gradient(135deg, #ff9a44, #fc6076); }
+    .tool-card[data-tool="mindmap"]    { background: linear-gradient(135deg, #b224ef, #7579ff); }
+    .tool-card[data-tool="kamus"]      { background: linear-gradient(135deg, #00c9ff, #92fe9d); color: #064e3b; }
+    .tool-card[data-tool="seragam"]    { background: linear-gradient(135deg, #fc5c7d, #6a82fb); }
+    .tool-card[data-tool="hujan"]      { background: linear-gradient(135deg, #4568dc, #b06ab3); }
+    .tool-card[data-tool="ujian"]      { background: linear-gradient(135deg, #f857a6, #ff5858); }
+
+    .tab-nav {
+        display: flex; padding: 0 0 12px; gap: 8px; overflow-x: auto;
+    }
+    .tab-nav::-webkit-scrollbar { height: 0; }
+
+    .tab-btn {
+        padding: 8px 14px;
+        border-radius: 20px;
+        background: white;
+        border: 1px solid rgba(124,58,237,0.1);
+        font-size: 0.78rem;
+        font-weight: 800;
+        color: var(--text-sub);
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.2s;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        display: flex; align-items: center; gap: 5px;
+    }
+
+    .tab-btn.active {
+        background: linear-gradient(135deg, #7c3aed, #ec4899);
+        color: white;
+        box-shadow: 0 4px 12px rgba(124,58,237,0.4);
+        transform: scale(1.05);
+    }
+
+    .tab-btn svg { width: 14px; height: 14px; }
+
+    .section-header {
+        display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+    }
+    .section-header h3 {
+        font-size: 1.05rem; font-weight: 800; color: var(--text-main);
+    }
+    .icon-badge {
+        width: 32px; height: 32px; border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        color: white;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+    .icon-badge svg { width: 16px; height: 16px; }
+
+    .empty-state {
+        text-align: center;
+        padding: 24px 20px;
+        color: var(--text-sub);
+        font-size: 0.85rem;
+        background: white;
+        border-radius: var(--radius-md);
+        border: 2px dashed rgba(124,58,237,0.15);
+    }
+    .empty-state .icon-wrap {
+        display: inline-flex;
+        width: 48px; height: 48px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #ede9fe, #fce7f3);
+        align-items: center; justify-content: center;
+        color: var(--primary);
+        margin-bottom: 10px;
+        animation: emojiBounce 2s infinite;
+    }
+
+    input, textarea, select {
+        width: 100%;
+        padding: 10px 12px;
+        margin: 8px 0;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        color: var(--text-main);
+        background: white;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, textarea:focus, select:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(167,139,250,0.15);
+    }
+    textarea { min-height: 90px; resize: vertical; }
+
+    .btn-main {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #7c3aed, #ec4899);
+        background-size: 200% 200%;
+        animation: gradientMove 3s ease infinite;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: transform 0.15s;
+        box-shadow: 0 4px 12px rgba(124,58,237,0.4);
+        display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-main:active { transform: scale(0.97); }
+
+    .btn-secondary {
+        width: 100%;
+        padding: 10px;
+        background: white;
+        color: var(--text-main);
+        border: 1.5px solid #e5e7eb;
+        border-radius: 12px;
+        font-weight: 700;
+        margin-top: 8px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-danger {
+        width: 100%;
+        padding: 10px;
+        background: #fef2f2;
+        color: var(--accent-red);
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        margin-top: 8px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+
+    /* Bottom Nav — FIXED with z-index 9999 */
+    .bottom-nav {
+        height: 68px;
+        background: rgba(255,255,255,0.98);
+        backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(124,58,237,0.1);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding-bottom: env(safe-area-inset-bottom, 0);
+        position: relative;
+        z-index: 9999;
+        flex-shrink: 0;
+        pointer-events: auto;
+    }
+
+    .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        background: none; border: none;
+        color: var(--text-sub);
+        font-size: 0.68rem;
+        font-weight: 800;
+        cursor: pointer;
+        width: 25%; padding: 8px 0;
+        transition: all 0.2s;
+        position: relative;
+        pointer-events: auto;
+        z-index: 10000;
+    }
+
+    .nav-item svg { transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+    .nav-item.active { color: var(--primary); }
+    .nav-item.active svg {
+        transform: scale(1.2) translateY(-3px);
+        filter: drop-shadow(0 3px 8px rgba(124,58,237,0.5));
+    }
+    .nav-item.active::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 20px;
+        height: 3px;
+        border-radius: 0 0 3px 3px;
+        background: linear-gradient(90deg, #7c3aed, #ec4899);
+        animation: navIndicator 0.3s ease forwards;
+    }
+    @keyframes navIndicator {
+        from { width: 0; opacity: 0; }
+        to { width: 20px; opacity: 1; }
+    }
+
+    .modal {
+        position: absolute; inset: 0;
+        background: rgba(17, 12, 46, 0.55);
+        backdrop-filter: blur(6px);
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+    }
+    .modal.show { display: flex; }
+
+    .modal-content {
+        background: white;
+        border-radius: var(--radius-lg);
+        width: 100%; max-width: 400px;
+        padding: 20px;
+        max-height: 85vh;
+        overflow-y: auto;
+        animation: slideUpModal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    @keyframes slideUpModal {
+        from { opacity: 0; transform: translateY(40px) scale(0.9); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-tool-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 4px; }
+    .modal-tool-sub { font-size: 0.75rem; color: var(--text-sub); margin-bottom: 14px; }
+
+    .toast {
+        position: absolute;
+        bottom: 90px; left: 50%;
+        transform: translateX(-50%) translateY(10px);
+        background: linear-gradient(135deg, #1f2937, #7c3aed);
+        color: white;
+        padding: 10px 18px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        z-index: 3000;
+        opacity: 0;
+        transition: all 0.3s;
+        pointer-events: none;
+        white-space: nowrap;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .result-box {
+        background: linear-gradient(135deg, #ede9fe, #fce7f3);
+        padding: 14px;
+        border-radius: 12px;
+        margin: 10px 0;
+        font-weight: 800;
+        color: var(--primary);
+        text-align: center;
+        font-size: 1rem;
+        border: 1px solid rgba(124,58,237,0.1);
+    }
+
+    .list-item {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 10px 12px;
+        background: linear-gradient(135deg, #faf5ff, #fdf2f8);
+        border-radius: 10px;
+        margin-bottom: 8px;
+        font-size: 0.85rem;
+        gap: 8px;
+        border: 1px solid rgba(124,58,237,0.08);
+    }
+    .list-item .del-btn {
+        background: none; border: none; color: var(--accent-red);
+        font-size: 0.7rem; font-weight: 800; padding: 4px 8px;
+        border-radius: 6px; cursor: pointer;
+    }
+    .list-item .del-btn:hover { background: #fff0ee; }
+
+    .calc-display {
+        background: linear-gradient(135deg, #1f2937, #111827);
+        color: #fbbf24;
+        padding: 16px;
+        border-radius: 12px;
+        text-align: right;
+        font-size: 1.6rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        min-height: 60px;
+        display: flex;
+        align-items: center; justify-content: flex-end;
+        word-break: break-all;
+        box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .calc-btn {
+        padding: 14px 4px;
+        background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+        border: none; border-radius: 10px;
+        font-size: 1rem; font-weight: 800;
+        color: var(--text-main); transition: transform 0.1s;
+        cursor: pointer;
+    }
+    .calc-btn:active { transform: scale(0.94); }
+    .calc-btn.op { background: linear-gradient(135deg, #ede9fe, #ddd6fe); color: var(--primary); }
+    .calc-btn.eq { background: linear-gradient(135deg, #7c3aed, #ec4899); color: white; }
+    .calc-btn.clear { background: linear-gradient(135deg, #fee2e2, #fecaca); color: var(--accent-red); }
+
+    .timer-display {
+        text-align: center; font-size: 2.8rem; font-weight: 900;
+        color: var(--text-main); padding: 16px 0;
+        font-variant-numeric: tabular-nums;
+        text-shadow: 0 2px 8px rgba(124,58,237,0.15);
+    }
+    .timer-display.running {
+        background: linear-gradient(135deg, #7c3aed, #ec4899);
+        background-clip: text; -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gradientMove 3s ease infinite;
+        background-size: 200% 200%;
+    }
+    .timer-presets { display: flex; gap: 6px; margin-bottom: 12px; }
+    .timer-presets button {
+        flex: 1; padding: 8px;
+        background: white; border: 1.5px solid #e5e7eb;
+        border-radius: 10px; font-size: 0.8rem; font-weight: 700;
+        color: var(--text-sub); cursor: pointer;
+    }
+    .timer-presets button.active {
+        background: linear-gradient(135deg, #7c3aed, #ec4899);
+        color: white; border-color: transparent;
+    }
+
+    .flashcard {
+        background: linear-gradient(135deg, #7c3aed, #ec4899, #fbbf24);
+        background-size: 200% 200%;
+        animation: gradientMove 5s ease infinite;
+        color: white;
+        padding: 30px 20px;
+        border-radius: var(--radius-md);
+        text-align: center;
+        min-height: 140px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.05rem; font-weight: 700;
+        margin-bottom: 12px;
+        cursor: pointer;
+        line-height: 1.4;
+        word-break: break-word;
+        box-shadow: 0 8px 20px rgba(124,58,237,0.4);
+    }
+
+    .quiz-option {
+        display: block; width: 100%; text-align: left;
+        padding: 12px; margin: 6px 0;
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 0.85rem; color: var(--text-main);
+        cursor: pointer; transition: all 0.15s;
+        font-family: inherit;
+    }
+    .quiz-option.selected { border-color: var(--primary); background: var(--primary-soft); }
+    .quiz-option.correct { border-color: #10b981; background: #d1fae5; }
+    .quiz-option.wrong { border-color: var(--accent-red); background: #fee2e2; }
+
+    .check-item {
+        display: flex; align-items: center; gap: 10px;
+        padding: 10px 12px;
+        background: linear-gradient(135deg, #faf5ff, #fdf2f8);
+        border-radius: 10px; margin-bottom: 6px; font-size: 0.85rem;
+        border: 1px solid rgba(124,58,237,0.08);
+        cursor: pointer;
+    }
+    .check-item input { width: auto; margin: 0; accent-color: var(--primary); transform: scale(1.3); }
+    .check-item.done label { text-decoration: line-through; color: var(--text-sub); }
+
+    .element-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+    .element-cell {
+        background: linear-gradient(135deg, #faf5ff, #fdf2f8);
+        padding: 6px 2px; border-radius: 8px;
+        text-align: center; cursor: pointer; transition: all 0.15s;
+        border: 1px solid rgba(124,58,237,0.06);
+    }
+    .element-cell:hover {
+        background: linear-gradient(135deg, #ede9fe, #fce7f3);
+        transform: scale(1.08);
+    }
+    .element-cell .num { color: var(--text-sub); font-size: 0.55rem; }
+    .element-cell .sym { font-weight: 900; color: var(--primary); font-size: 0.95rem; display: block; }
+    .element-cell .name { color: var(--text-sub); font-size: 0.6rem; }
+
+    .volume-row { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
+    .volume-row input[type="range"] { flex: 1; margin: 0; }
+
+    .day-tab { display: flex; gap: 4px; margin-bottom: 10px; overflow-x: auto; }
+    .day-tab::-webkit-scrollbar { height: 0; }
+    .day-tab button {
+        padding: 7px 12px;
+        background: white;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 0.75rem; font-weight: 700;
+        color: var(--text-sub); white-space: nowrap; cursor: pointer;
+    }
+    .day-tab button.active {
+        background: linear-gradient(135deg, #7c3aed, #ec4899);
+        color: white; border-color: transparent;
+        box-shadow: 0 4px 10px rgba(124,58,237,0.3);
+    }
+
+    .file-preview {
+            width: 100%; max-height: 260px; object-fit: contain;
+        border-radius: 10px; margin: 8px 0; background: var(--bg-main);
+    }
+
+    .brand-card {
+        background: linear-gradient(135deg, #1f2937 0%, #7c3aed 100%);
+        color: white;
+        padding: 24px 20px;
+        border-radius: var(--radius-md);
+        margin-bottom: 14px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    .brand-card::before {
+        content: '';
+        position: absolute; inset: -50%;
+        background: radial-gradient(circle, rgba(236,72,153,0.3) 0%, transparent 70%);
+        animation: shine 4s ease-in-out infinite;
+        pointer-events: none;
+    }
+    .brand-card h3 {
+        font-size: 1.1rem; font-weight: 800; margin-bottom: 12px;
+        color: white; position: relative;
+    }
+    .brand-credit {
+        font-size: 0.95rem; font-weight: 600; letter-spacing: 1px;
+        position: relative; line-height: 1.6;
+    }
+    .brand-credit .name {
+        background: linear-gradient(135deg, #fbbf24, #ec4899, #a78bfa);
+        background-size: 200% 200%;
+        animation: gradientMove 3s ease infinite;
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 800;
+        font-size: 1.1rem;
+        display: inline-block;
+        margin-top: 4px;
+    }
+    .brand-credit .version {
+        font-size: 0.7rem; opacity: 0.8; margin-top: 10px;
+        font-weight: 500; letter-spacing: 0;
+    }
+
+    .project-link {
+        display: flex; align-items: center; gap: 10px;
+        padding: 12px 14px;
+        background: white;
+        border-radius: 12px;
+        margin-bottom: 8px;
+        text-decoration: none;
+        color: var(--text-main);
+        font-weight: 700;
+        font-size: 0.85rem;
+        box-shadow: var(--shadow-sm);
+        border-left: 4px solid;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .project-link:hover {
+        transform: translateX(6px);
+        box-shadow: var(--shadow);
+    }
+    .project-link:nth-child(1) { border-left-color: #7c3aed; }
+    .project-link:nth-child(2) { border-left-color: #ec4899; }
+    .project-link:nth-child(3) { border-left-color: #fbbf24; }
+    .project-link:nth-child(4) { border-left-color: #10b981; }
+
+    .project-link .num {
+        width: 26px; height: 26px; border-radius: 8px;
+        background: linear-gradient(135deg, #ede9fe, #fce7f3);
+        color: var(--primary); font-weight: 800;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.75rem; flex-shrink: 0;
+    }
+
+    .project-link .arrow {
+        margin-left: auto;
+        color: var(--primary);
+        opacity: 0.6;
+        transition: transform 0.2s;
+    }
+    .project-link:hover .arrow { transform: translateX(3px); opacity: 1; }
+
+    .coming-soon {
+        text-align: center;
+        padding: 20px;
+        background: linear-gradient(135deg, #fef3c7, #fce7f3);
+        border-radius: 12px;
+        font-weight: 800;
+        color: #78350f;
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+        animation: pulse 2s infinite;
+        margin-top: 8px;
+    }
+
+    .mood-icon, .tips-icon {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 28px; height: 28px; border-radius: 8px;
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        color: white;
+        margin-right: 6px;
+        flex-shrink: 0;
+    }
+</style>
+</head>
+<body>
+
+<canvas id="fx-canvas"></canvas>
+
+<div class="app-container">
+    <div id="splash" onclick="dismissSplash()">
+        <div class="splash-logo">
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <h2>DAFZZ INTELLIGENCE</h2>
+        <p>Klik layar jika tidak otomatis masuk</p>
+    </div>
+
+    <header>
+        <div class="user-profile">
+            <div class="avatar">D</div>
+            <div class="user-info">
+                <h2 id="user-name">Siswa DAFZZ</h2>
+                <p>
+                    <span class="xp-badge">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        Lv <span id="lvl-val">1</span>
+                    </span>
+                    <span id="xp-val">0</span> XP
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <div class="content-area">
+        <!-- BERANDA -->
+        <div id="view-beranda" class="view active">
+            <div class="fun-strip">
+                <span class="fun-pill">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5 2 7L12 16l-6.5 4.5 2-7L2 9h7z"/></svg>
+                    Semangat
+                </span>
+                <span class="fun-pill">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    Fokus
+                </span>
+                <span class="fun-pill">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                    Cerah
+                </span>
+                <span class="fun-pill">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Semoga Beruntung
+                </span>
+                <span class="fun-pill">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    Tetap Fokus
+                </span>
+            </div>
+
+            <div class="card card-main">
+                <div class="grad-cap">
+                    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    </svg>
+                </div>
+                <span style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; position: relative;">Pelajaran Utama Hari Ini</span>
+                <h2>Matematika</h2>
+                <p>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    07.00 - 08.30
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:8px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    Ruang B1
+                </p>
+            </div>
+
+            <div class="mood-card">
+                <div class="mood-title">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                    Mood Hari Ini
+                </div>
+                <div class="mood-text" id="mood-text">Kamu luar biasa! Terus semangat belajar ya</div>
+            </div>
+
+            <div class="grid-2" style="margin-bottom: 14px;">
+                <div class="stat-card streak">
+                    <div class="stat-icon streak">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg>
+                    </div>
+                    <span style="font-size: 0.65rem; color: var(--text-sub); font-weight: 800; letter-spacing: 0.5px;">STREAK</span>
+                    <h3 style="color: #f97316; font-size: 1.15rem; margin-top: 4px;"><span id="streak-val">1</span> Hari</h3>
+                </div>
+                <div class="stat-card exam">
+                    <div class="stat-icon exam">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    </div>
+                    <span style="font-size: 0.65rem; color: var(--text-sub); font-weight: 800; letter-spacing: 0.5px;">UJIAN</span>
+                    <h3 style="color: #3b82f6; font-size: 1.15rem; margin-top: 4px;">4 Soal</h3>
+                </div>
+            </div>
+
+            <div class="card card-yellow" style="background: linear-gradient(135deg, #fff9e6 0%, #ffeaa7 100%); border: none;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #f97316, #ea580c); display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; animation: emojiBounce 2s infinite;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <div style="flex: 1;">
+                        <span style="font-size: 0.65rem; color: #d63031; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Ulangan Harian</span>
+                        <h4 style="margin-top: 3px; font-size: 0.95rem; font-weight: 800;">IPA - Biologi Sel</h4>
+                        <p style="font-size: 0.72rem; color: var(--text-sub); margin-top: 2px;">3 Hari Lagi (11 Nov)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="section-header" style="margin-bottom: 10px;">
+                    <div class="icon-badge" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                    </div>
+                    <h3 style="font-size: 0.95rem;">Tips Belajar</h3>
+                </div>
+                <p style="font-size: 0.82rem; color: var(--text-sub); line-height: 1.5;">
+                    Gunakan teknik <strong style="color: var(--primary);">Pomodoro</strong> — belajar 25 menit, istirahat 5 menit. Otak lebih fokus!
+                </p>
+            </div>
+        </div>
+
+        <!-- BELAJAR -->
+        <div id="view-belajar" class="view">
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="switchSubTab(event, 'materi')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    Materi
+                </button>
+                <button class="tab-btn" onclick="switchSubTab(event, 'jadwal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    Jadwal
+                </button>
+                <button class="tab-btn" onclick="switchSubTab(event, 'kalender')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="12" cy="15" r="1" fill="currentColor"/></svg>
+                    Kalender
+                </button>
+                <button class="tab-btn" onclick="switchSubTab(event, 'catatan')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    Catatan
+                </button>
+            </div>
+
+            <div id="sub-materi" class="sub-tab-content">
+                <div class="card" style="background: linear-gradient(135deg, #ede9fe, #fce7f3); border: none;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #7c3aed, #ec4899); display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; box-shadow: 0 4px 10px rgba(124,58,237,0.3);">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        </div>
+                        <div style="flex: 1;">
+                            <h4 style="font-size: 0.95rem; font-weight: 800;">Bab 1: Persamaan Kuadrat</h4>
+                            <p style="font-size: 0.7rem; color: var(--text-sub); font-weight: 600; margin-top: 2px;">Matematika • 15 soal latihan</p>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 12px; line-height: 1.5;">Pelajari rumus ABC, diskriminan, dan grafik fungsi kuadrat.</p>
+                    <button class="btn-main" onclick="addXP(20)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        Selesaikan Bab (+20 XP)
+                    </button>
+                </div>
+                <div class="card">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v2a3 3 0 0 0 6 0V3"/><path d="M6 3h12v6a6 6 0 0 1-12 0z"/></svg>
+                        </div>
+                        <div style="flex: 1;">
+                            <h4 style="font-size: 0.9rem; font-weight: 800;">Bab 2: Sistem Periodik</h4>
+                            <p style="font-size: 0.72rem; color: var(--text-sub); margin-top: 2px;">Kimia • Belum dimulai</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #f97316, #ea580c); display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M4.22 10A8 8 0 0 1 19.78 10"/><path d="M12 22v-6"/><path d="M8 18h8"/></svg>
+                        </div>
+                        <div style="flex: 1;">
+                            <h4 style="font-size: 0.9rem; font-weight: 800;">Bab 3: Fotosintesis</h4>
+                            <p style="font-size: 0.72rem; color: var(--text-sub); margin-top: 2px;">Biologi • Belum dimulai</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sub-jadwal" class="sub-tab-content" style="display: none;">
+                <div class="schedule-item senin">
+                    <div class="schedule-day-badge">SEN</div>
+                    <div class="schedule-content">
+                        <h4>Senin</h4>
+                        <p>07.00 - IPA • 08.30 - MTK • 10.00 - PKN</p>
+                    </div>
+                </div>
+                <div class="schedule-item selasa">
+                    <div class="schedule-day-badge">SEL</div>
+                    <div class="schedule-content">
+                        <h4>Selasa</h4>
+                        <p>07.00 - TIK • 08.30 - SBK • 10.00 - B.Indo</p>
+                    </div>
+                </div>
+                <div class="schedule-item rabu">
+                    <div class="schedule-day-badge">RAB</div>
+                    <div class="schedule-content">
+                        <h4>Rabu</h4>
+                        <p>07.00 - MTK • 08.30 - IPA • 10.00 - B.Inggris</p>
+                    </div>
+                </div>
+                <div class="schedule-item kamis">
+                    <div class="schedule-day-badge">KAM</div>
+                    <div class="schedule-content">
+                        <h4>Kamis</h4>
+                        <p>07.00 - IPS • 08.30 - MTK • 10.00 - Seni</p>
+                    </div>
+                </div>
+                <div class="schedule-item jumat">
+                    <div class="schedule-day-badge">JUM</div>
+                    <div class="schedule-content">
+                        <h4>Jumat</h4>
+                        <p>07.00 - Agama • 08.30 - PJOK • 10.00 - B.Indo</p>
+                    </div>
+                </div>
+                <div class="schedule-item sabtu">
+                    <div class="schedule-day-badge">SAB</div>
+                    <div class="schedule-content">
+                        <h4>Sabtu</h4>
+                        <p>07.00 - Ekstrakurikuler • 09.00 - Pramuka</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sub-kalender" class="sub-tab-content" style="display: none;">
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <div class="calendar-title" id="cal-title">November 2025</div>
+                        <div class="calendar-nav">
+                            <button onclick="changeMonth(-1)">‹</button>
+                            <button onclick="changeMonth(1)">›</button>
+                        </div>
+                    </div>
+                    <div class="calendar-weekdays">
+                        <div class="sun">Min</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div class="sat">Sab</div>
+                    </div>
+                    <div class="calendar-grid" id="cal-grid"></div>
+                    <div class="calendar-legend">
+                        <span><span class="legend-dot libur"></span> Hari Libur</span>
+                        <span><span class="legend-dot ulangan"></span> Ulangan</span>
+                        <span><span class="legend-dot today"></span> Hari Ini</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="section-header">
+                        <div class="icon-badge" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        </div>
+                        <h3 style="font-size: 0.95rem;">Hari Libur Bulan Ini</h3>
+                    </div>
+                    <ul style="list-style: none; padding: 0; font-size: 0.82rem; color: var(--text-sub); line-height: 2; font-weight: 600;">
+                        <li>9 Nov - Maulid Nabi</li>
+                        <li>25 Nov - Hari Guru Nasional</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="sub-catatan" class="sub-tab-content" style="display: none;">
+                <div class="card">
+                    <input type="text" id="note-in" placeholder="Tulis catatan cepat..." maxlength="200">
+                    <button class="btn-main" onclick="saveNote()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                        Simpan Catatan
+                    </button>
+                </div>
+                <div id="note-list"></div>
+            </div>
+        </div>
+
+        <!-- TOOL -->
+        <div id="view-tool" class="view">
+            <div class="section-header" style="margin-bottom: 14px;">
+                <div class="icon-badge" style="background: linear-gradient(135deg, #7c3aed, #ec4899);">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                </div>
+                <h3>18 Tools Pintar</h3>
+            </div>
+            <div class="grid-tools" id="tool-grid"></div>
+        </div>
+
+        <!-- INFO -->
+        <div id="view-info" class="view">
+            <div class="brand-card">
+                <h3>DAFZZ INTELLIGENCE</h3>
+                <div class="brand-credit">
+                    Apps By<br>
+                    <span class="name">𝚋𝚢 𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪</span>
+                    <div class="version">Versi 4.0 · Colorful Edition</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="section-header" style="margin-bottom: 12px;">
+                    <div class="icon-badge" style="background: linear-gradient(135deg, #7c3aed, #ec4899);">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    </div>
+                    <h3 style="font-size: 0.95rem;">𝐏𝐑𝐎𝐉𝐄𝐂𝐊-𝐏𝐑𝐎𝐉𝐄𝐂𝐊</h3>
+                </div>
+                <a class="project-link" href="https://my-life-dafzz.onrender.com" target="_blank" rel="noopener">
+                    <span class="num">1</span>
+                    <span>My Life Dafzz</span>
+                    <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+                <a class="project-link" href="https://hacker-kingdafzz-1.onrender.com/" target="_blank" rel="noopener">
+                    <span class="num">2</span>
+                    <span>Hacker King Dafzz</span>
+                    <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+                <a class="project-link" href="https://hollow-dafzz.onrender.com" target="_blank" rel="noopener">
+                    <span class="num">3</span>
+                    <span>Hollow Dafzz</span>
+                    <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+                <a class="project-link" href="https://jadwal-sekolah.onrender.com/" target="_blank" rel="noopener">
+                    <span class="num">4</span>
+                    <span>Jadwal Sekolah</span>
+                    <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+
+                <div class="coming-soon">
+                    𝐍𝐚𝐧𝐭𝐢𝐤𝐚𝐧.......
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="section-header" style="margin-bottom: 12px;">
+                    <div class="icon-badge" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                    </div>
+                    <h3 style="font-size: 0.95rem;">Penyimpanan Data</h3>
+                </div>
+                <p style="font-size: 0.78rem; color: var(--text-sub); margin-bottom: 10px; line-height: 1.5;">Semua data tersimpan di browser kamu. Reset jika perlu.</p>
+                <button class="btn-main" style="background: linear-gradient(135deg, #ef4444, #dc2626);" onclick="resetAllData()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    Reset Data
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchMainView('view-beranda', this)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            <span>Beranda</span>
+        </button>
+        <button class="nav-item" onclick="switchMainView('view-belajar', this)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <span>Belajar</span>
+        </button>
+        <button class="nav-item" onclick="switchMainView('view-tool', this)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span>Tool</span>
+        </button>
+        <button class="nav-item" onclick="switchMainView('view-info', this)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <span>Info</span>
+        </button>
+    </nav>
+
+    <div id="modal-box" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title" class="modal-tool-title">Tool</h3>
+            <div id="modal-body"></div>
+            <button class="btn-main" style="margin-top: 14px; background: #636e72;" onclick="closeModalBox()">Tutup</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+</div>
+
+<script>
+/* =========================================================
+   FX CANVAS - Particle Background
+   ========================================================= */
+(function initFX() {
+    const canvas = document.getElementById('fx-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const colors = ['#a78bfa', '#ec4899', '#fbbf24', '#10b981', '#3b82f6', '#f97316'];
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    for (let i = 0; i < 40; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 3 + 1,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            color: colors[Math.floor(Math.random() * colors.length)]
+        });
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = 0.6;
+            ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(animate);
+    }
+    animate();
+})();
+
+/* =========================================================
+   STATE & PERSISTENSI
+   ========================================================= */
+const DEFAULT_STATE = {
+    xp: 0, level: 1, streak: 1, notes: [],
+    flashcards: [], savings: [], books: [],
+    piket: { senin: [], selasa: [], rabu: [], kamis: [], jumat: [], sabtu: [], minggu: [] },
+    mindmap: { center: '', branches: [] },
+    seragam: {}
+};
+
+let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+let audioCtx = null;
+let activeTimers = [];
+let rainCtx = null, rainSource = null, rainGain = null;
+
+const MOODS = [
+    "Kamu luar biasa! Terus semangat belajar ya",
+    "Hari ini cerah, seperti semangatmu",
+    "Setiap usaha kecil hari ini, hasil besar besok",
+    "Jangan lupa istirahat ya, otak butuh recharge",
+    "Kamu lebih hebat dari yang kamu kira",
+    "Belajar itu investasi jangka panjang",
+    "Satu langkah kecil tetap lebih baik dari nol",
+    "Fokus, konsisten, dan nikmati prosesnya"
+];
+
+function playBeep() {
+    try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.08);
+    } catch (e) {}
+}
+
+let toastTimeout;
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.innerText = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function dismissSplash() {
+    const splash = document.getElementById('splash');
+    if (!splash) return;
+    splash.style.opacity = '0';
+    setTimeout(() => { splash.style.display = 'none'; }, 500);
+}
+setTimeout(dismissSplash, 1200);
+
+function loadData() {
+    try {
+        const local = localStorage.getItem('dafzz_state');
+        if (local) {
+            const parsed = JSON.parse(local);
+            state = Object.assign({}, DEFAULT_STATE, parsed);
+            state.piket = Object.assign({}, DEFAULT_STATE.piket, parsed.piket || {});
+            state.mindmap = Object.assign({}, DEFAULT_STATE.mindmap, parsed.mindmap || {});
+        }
+    } catch (e) {
+        state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    }
+    updateUI();
+    renderNotesUI();
+    document.getElementById('mood-text').innerText = MOODS[Math.floor(Math.random() * MOODS.length)];
+    initCalendar();
+    buildToolGrid();
+}
+
+function saveData() {
+    try {
+        localStorage.setItem('dafzz_state', JSON.stringify(state));
+    } catch (e) {}
+    updateUI();
+}
+
+function updateUI() {
+    const lvl = Math.floor(state.xp / 100) + 1;
+    document.getElementById('xp-val').innerText = state.xp;
+    document.getElementById('lvl-val').innerText = lvl;
+    document.getElementById('streak-val').innerText = state.streak;
+}
+
+function switchMainView(viewId, btn) {
+    playBeep();
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const targetView = document.getElementById(viewId);
+    if (targetView) targetView.classList.add('active');
+    if (btn) btn.classList.add('active');
+    const content = document.querySelector('.content-area');
+    if (content) content.scrollTop = 0;
+}
+
+function switchSubTab(e, tabId) {
+    playBeep();
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.sub-tab-content').forEach(c => c.style.display = 'none');
+    e.currentTarget.classList.add('active');
+    const target = document.getElementById('sub-' + tabId);
+    target.style.display = 'block';
+    target.style.animation = 'fadeSlideIn 0.4s ease';
+}
+
+function addXP(amount) {
+    playBeep();
+    state.xp += amount;
+    saveData();
+    showToast(`+${amount} XP diperoleh!`);
+}
+
+function saveNote() {
+    const input = document.getElementById('note-in');
+    if (input.value.trim() !== '') {
+        state.notes.push(input.value.trim());
+        input.value = '';
+        saveData();
+        renderNotesUI();
+        showToast('Catatan tersimpan');
+    } else {
+        showToast('Catatan kosong');
+    }
+}
+
+function renderNotesUI() {
+    const list = document.getElementById('note-list');
+    if (!state.notes || state.notes.length === 0) {
+        list.innerHTML = `<div class="empty-state">
+            <div class="icon-wrap">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            Belum ada catatan. Yuk tulis!
+        </div>`;
+        return;
+    }
+    list.innerHTML = state.notes.map((n, i) => `
+        <div class="list-item">
+            <span style="flex:1; word-break: break-word;">${escapeHtml(n)}</span>
+            <button class="del-btn" onclick="deleteNote(${i})">Hapus</button>
+        </div>
+    `).join('');
+}
+
+function deleteNote(index) {
+    if (!confirm('Hapus catatan ini?')) return;
+    state.notes.splice(index, 1);
+    saveData();
+    renderNotesUI();
+    showToast('Catatan dihapus');
+}
+
+function resetAllData() {
+    if (confirm("Reset seluruh data?")) {
+        localStorage.removeItem('dafzz_state');
+        location.reload();
+    }
+}
+
+function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, s => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[s]));
+}
+
+/* ============ CALENDAR ============ */
+let calDate = new Date();
+const LIBUR = { '11-9': 'Maulid Nabi', '11-25': 'Hari Guru' };
+const ULANGAN = { '11-11': 'Ulangan IPA', '11-18': 'Ulangan MTK', '11-22': 'Ulangan B.Indo' };
+
+function initCalendar() { renderCalendar(); }
+
+function changeMonth(dir) {
+    playBeep();
+    calDate.setMonth(calDate.getMonth() + dir);
+    renderCalendar();
+}
+
+function renderCalendar() {
+    const year = calDate.getFullYear();
+    const month = calDate.getMonth();
+    const monthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    document.getElementById('cal-title').innerText = `${monthNames[month]} ${year}`;
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const prevDays = new Date(year, month, 0).getDate();
+    const today = new Date();
+    const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+
+    const grid = document.getElementById('cal-grid');
+    let html = '';
+
+    for (let i = firstDay - 1; i >= 0; i--) {
+        html += `<div class="calendar-day other">${prevDays - i}</div>`;
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+        const key = `${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        let cls = 'calendar-day';
+        if (isCurrentMonth && d === today.getDate()) cls += ' today';
+        if (LIBUR[key]) cls += ' libur';
+        else if (ULANGAN[key]) cls += ' ulangan';
+        html += `<div class="${cls}">${d}</div>`;
+    }
+    grid.innerHTML = html;
+}
+
+/* ============ TOOL GRID BUILDER ============ */
+const TOOL_LIST = [
+    { key: 'kalkulator', label: 'Kalkulator', icon: '<rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10"/><line x1="12" y1="10" x2="12" y2="10"/><line x1="16" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="16" y2="18"/>' },
+    { key: 'pomodoro', label: 'Pomodoro', icon: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' },
+    { key: 'flashcard', label: 'Flashcard', icon: '<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>' },
+    { key: 'konverter', label: 'Konverter', icon: '<polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>' },
+    { key: 'periodik', label: 'Tabel Periodik', icon: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>' },
+    { key: 'pdf', label: 'Pembaca PDF', icon: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>' },
+    { key: 'katakata', label: 'Hitung Kata', icon: '<polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/>' },
+    { key: 'stopwatch', label: 'Stopwatch', icon: '<circle cx="12" cy="13" r="8"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="9" y1="2" x2="15" y2="2"/>' },
+    { key: 'rumus', label: 'Rumus MTK', icon: '<path d="M18 4H6l6 8-6 8h12"/>' },
+    { key: 'tabungan', label: 'Tabungan', icon: '<rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 13h2"/>' },
+    { key: 'papan', label: 'Foto Papan', icon: '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>' },
+    { key: 'rak', label: 'Rak Buku', icon: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>' },
+    { key: 'piket', label: 'Piket', icon: '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>' },
+    { key: 'mindmap', label: 'Mindmap', icon: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>' },
+    { key: 'kamus', label: 'Kamus Sains', icon: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>' },
+    { key: 'seragam', label: 'Seragam', icon: '<path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>' },
+    { key: 'hujan', label: 'Audio Hujan', icon: '<path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>' },
+    { key: 'ujian', label: 'Simulasi Ujian', icon: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>' }
+];
+
+function buildToolGrid() {
+    const grid = document.getElementById('tool-grid');
+    grid.innerHTML = TOOL_LIST.map(t => `
+        <div class="tool-card" data-tool="${t.key}" onclick="openToolModal('${t.key}')">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${t.icon}</svg>
+            <h4>${t.label}</h4>
+        </div>
+    `).join('');
+}
+
+/* ============ MODAL ============ */
+function clearActiveTimers() {
+    activeTimers.forEach(id => clearInterval(id));
+    activeTimers = [];
+    stopRain();
+}
+
+function openToolModal(toolKey) {
+    playBeep();
+    const tool = TOOLS[toolKey];
+    if (!tool) { showToast('Tool tidak ditemukan'); return; }
+    document.getElementById('modal-title').innerText = tool.name;
+    document.getElementById('modal-body').innerHTML = tool.render();
+    document.getElementById('modal-box').classList.add('show');
+    try { tool.init?.(); } catch (e) { console.error(e); }
+}
+
+function closeModalBox() {
+    document.getElementById('modal-box').classList.remove('show');
+    clearActiveTimers();
+}
+
+document.getElementById('modal-box').addEventListener('click', e => {
+    if (e.target.id === 'modal-box') closeModalBox();
+});
+
+/* ============ ICONS ============ */
+const ICO = {
+    plus: '<polyline points="12 5 12 19 5 12 19 12"/>',
+    save: '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>',
+    play: '<polygon points="5 3 19 12 5 21 5 3"/>',
+    pause: '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>',
+    reset: '<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>',
+    swap: '<polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
+    check: '<polyline points="20 6 9 17 4 12"/>',
+    trash: '<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/>',
+    book: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+    money: '<rect x="2" y="6" width="20" height="14" rx="2"/><circle cx="12" cy="13" r="3"/>',
+    brain: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>',
+    mic: '<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/>',
+    volume: '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>',
+    cam: '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>'
+};
+
+function svgIco(path, size = 16, extra = '') {
+    return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="${extra}">${path}</svg>`;
+}
+
+function emptyState(iconPath, text) {
+    return `<div class="empty-state">
+        <div class="icon-wrap">${svgIco(iconPath, 24)}</div>
+        ${text}
+    </div>`;
+}
+
+/* ============ TOOLS ============ */
+const TOOLS = {};
+
+TOOLS.kalkulator = {
+    name: 'Kalkulator Ilmiah',
+    render: () => `
+        <p class="modal-tool-sub">Hitung ekspresi matematika dengan aman.</p>
+        <div class="calc-display" id="calc-display">0</div>
+        <div class="calc-grid" id="calc-grid">
+            <button class="calc-btn clear" data-calc="C">C</button>
+            <button class="calc-btn op" data-calc="(">(</button>
+            <button class="calc-btn op" data-calc=")">)</button>
+            <button class="calc-btn op" data-calc="/">÷</button>
+            <button class="calc-btn" data-calc="7">7</button>
+            <button class="calc-btn" data-calc="8">8</button>
+            <button class="calc-btn" data-calc="9">9</button>
+            <button class="calc-btn op" data-calc="*">×</button>
+            <button class="calc-btn" data-calc="4">4</button>
+            <button class="calc-btn" data-calc="5">5</button>
+            <button class="calc-btn" data-calc="6">6</button>
+            <button class="calc-btn op" data-calc="-">−</button>
+            <button class="calc-btn" data-calc="1">1</button>
+            <button class="calc-btn" data-calc="2">2</button>
+            <button class="calc-btn" data-calc="3">3</button>
+            <button class="calc-btn op" data-calc="+">+</button>
+            <button class="calc-btn" data-calc="0">0</button>
+            <button class="calc-btn" data-calc=".">.</button>
+            <button class="calc-btn clear" data-calc="DEL">DEL</button>
+            <button class="calc-btn eq" data-calc="=">=</button>
+        </div>
+    `,
+    init: () => {
+        let expr = '';
+        const display = document.getElementById('calc-display');
+        document.getElementById('calc-grid').onclick = (e) => {
+            const btn = e.target.closest('[data-calc]');
+            if (!btn) return;
+            playBeep();
+            const v = btn.dataset.calc;
+            if (v === 'C') expr = '';
+            else if (v === 'DEL') expr = expr.slice(0, -1);
+            else if (v === '=') {
+                try {
+                    const safe = expr.replace(/[^0-9+\-*/().]/g, '');
+                    if (!safe) throw new Error('empty');
+                    const result = Function('"use strict"; return (' + safe + ')')();
+                    if (!isFinite(result)) throw new Error('inf');
+                    expr = String(result);
+                } catch (err) { expr = 'Error'; }
+            } else {
+                if (expr === 'Error') expr = '';
+                expr += v;
+            }
+            display.innerText = expr || '0';
+        };
+    }
+};
+
+TOOLS.pomodoro = {
+    name: 'Timer Pomodoro',
+    render: () => `
+        <p class="modal-tool-sub">Fokus 25 menit, istirahat 5 menit.</p>
+        <div class="timer-presets" id="pomo-presets">
+            <button data-min="5">5 mnt</button>
+            <button data-min="15">15 mnt</button>
+            <button data-min="25" class="active">25 mnt</button>
+            <button data-min="45">45 mnt</button>
+        </div>
+        <div class="timer-display" id="pomo-display">25:00</div>
+        <button class="btn-main" id="pomo-toggle">${svgIco(ICO.play)} Mulai</button>
+        <button class="btn-secondary" id="pomo-reset">${svgIco(ICO.reset)} Reset</button>
+    `,
+    init: () => {
+        let timeLeft = 25 * 60, running = false, intervalId = null;
+        const display = document.getElementById('pomo-display');
+        const toggle = document.getElementById('pomo-toggle');
+        const render = () => {
+            const m = Math.floor(timeLeft / 60), s = timeLeft % 60;
+            display.innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            display.classList.toggle('running', running);
+        };
+        const tick = () => {
+            if (timeLeft > 0) { timeLeft--; render(); }
+            else { clearInterval(intervalId); running = false; toggle.innerHTML = svgIco(ICO.play) + ' Mulai'; render(); playBeep(); showToast('Waktu habis!'); }
+        };
+        toggle.onclick = () => {
+            playBeep();
+            if (running) {
+                clearInterval(intervalId);
+                activeTimers = activeTimers.filter(id => id !== intervalId);
+                running = false;
+                toggle.innerHTML = svgIco(ICO.play) + ' Mulai';
+            } else {
+                running = true;
+                toggle.innerHTML = svgIco(ICO.pause) + ' Jeda';
+                intervalId = setInterval(tick, 1000);
+                activeTimers.push(intervalId);
+            }
+            render();
+        };
+        document.getElementById('pomo-reset').onclick = () => {
+            playBeep();
+            clearInterval(intervalId);
+            activeTimers = activeTimers.filter(id => id !== intervalId);
+            running = false; timeLeft = 25 * 60;
+            toggle.innerHTML = svgIco(ICO.play) + ' Mulai';
+            document.querySelectorAll('#pomo-presets button').forEach(b => b.classList.remove('active'));
+            document.querySelector('#pomo-presets button[data-min="25"]').classList.add('active');
+            render();
+        };
+        document.getElementById('pomo-presets').onclick = (e) => {
+                    const btn = e.target.closest('button');
+            if (!btn) return;
+            playBeep();
+            clearInterval(intervalId);
+            activeTimers = activeTimers.filter(id => id !== intervalId);
+            running = false; timeLeft = parseInt(btn.dataset.min) * 60;
+            document.querySelectorAll('#pomo-presets button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            toggle.innerHTML = svgIco(ICO.play) + ' Mulai';
+            render();
+        };
+        render();
+    }
+};
+
+TOOLS.flashcard = {
+    name: 'Flashcard',
+    render: () => `
+        <p class="modal-tool-sub">Klik kartu untuk membalik.</p>
+        <input type="text" id="fc-front" placeholder="Depan (pertanyaan)" maxlength="120">
+        <input type="text" id="fc-back" placeholder="Belakang (jawaban)" maxlength="120">
+        <button class="btn-main" id="fc-add">${svgIco(ICO.plus)} Tambah Kartu</button>
+        <div id="fc-study" style="margin-top: 16px;"></div>
+        <div id="fc-list" style="margin-top: 12px;"></div>
+    `,
+    init: () => {
+        let currentIndex = 0, showingBack = false;
+        const renderStudy = () => {
+            const wrap = document.getElementById('fc-study');
+            if (!state.flashcards.length) {
+                wrap.innerHTML = emptyState(ICO.book, 'Belum ada kartu');
+                return;
+            }
+            if (currentIndex >= state.flashcards.length) currentIndex = 0;
+            const card = state.flashcards[currentIndex];
+            wrap.innerHTML = `
+                <div class="flashcard" id="fc-card">${escapeHtml(showingBack ? card.back : card.front)}</div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn-secondary" id="fc-prev" style="margin-top:0;">← Sebelumnya</button>
+                    <button class="btn-secondary" id="fc-next" style="margin-top:0;">Berikutnya →</button>
+                </div>
+                <p style="text-align:center; font-size:0.7rem; color:var(--text-sub); margin-top:8px;">${currentIndex + 1} / ${state.flashcards.length}</p>
+            `;
+            document.getElementById('fc-card').onclick = () => { playBeep(); showingBack = !showingBack; renderStudy(); };
+            document.getElementById('fc-prev').onclick = () => { playBeep(); currentIndex = (currentIndex - 1 + state.flashcards.length) % state.flashcards.length; showingBack = false; renderStudy(); };
+            document.getElementById('fc-next').onclick = () => { playBeep(); currentIndex = (currentIndex + 1) % state.flashcards.length; showingBack = false; renderStudy(); };
+        };
+        const renderList = () => {
+            const list = document.getElementById('fc-list');
+            if (!state.flashcards.length) { list.innerHTML = ''; return; }
+            list.innerHTML = state.flashcards.map((c, i) => `
+                <div class="list-item">
+                    <span style="flex:1; word-break:break-word;"><strong>${escapeHtml(c.front)}</strong> → ${escapeHtml(c.back)}</span>
+                    <button class="del-btn" onclick="fcDelete(${i})">Hapus</button>
+                </div>
+            `).join('');
+        };
+        window.fcDelete = (i) => {
+            if (!confirm('Hapus kartu ini?')) return;
+            state.flashcards.splice(i, 1); saveData();
+            currentIndex = 0; showingBack = false;
+            renderStudy(); renderList(); showToast('Kartu dihapus');
+        };
+        document.getElementById('fc-add').onclick = () => {
+            const f = document.getElementById('fc-front').value.trim();
+            const b = document.getElementById('fc-back').value.trim();
+            if (!f || !b) { showToast('Isi depan & belakang'); return; }
+            state.flashcards.push({ front: f, back: b });
+            saveData();
+            document.getElementById('fc-front').value = '';
+            document.getElementById('fc-back').value = '';
+            renderStudy(); renderList(); showToast('Kartu ditambahkan');
+        };
+        renderStudy(); renderList();
+    }
+};
+
+TOOLS.konverter = {
+    name: 'Konverter Satuan',
+    render: () => `
+        <p class="modal-tool-sub">Konversi panjang, berat, suhu, dan volume.</p>
+        <select id="conv-type">
+            <option value="panjang">Panjang</option>
+            <option value="berat">Berat</option>
+            <option value="suhu">Suhu</option>
+            <option value="volume">Volume</option>
+        </select>
+        <input type="number" id="conv-input" placeholder="Nilai" value="1" step="any">
+        <select id="conv-from"></select>
+        <select id="conv-to"></select>
+        <div class="result-box" id="conv-result">—</div>
+        <button class="btn-secondary" id="conv-swap">${svgIco(ICO.swap)} Tukar Arah</button>
+    `,
+    init: () => {
+        const units = {
+            panjang: { m: 1, cm: 0.01, mm: 0.001, km: 1000, in: 0.0254, ft: 0.3048, mi: 1609.344 },
+            berat: { g: 1, kg: 1000, mg: 0.001, ton: 1000000, lb: 453.592, oz: 28.3495 },
+            suhu: { C: 1, F: 1, K: 1 },
+            volume: { L: 1, mL: 0.001, gal: 3.78541, qt: 0.946353 }
+        };
+        const typeSel = document.getElementById('conv-type');
+        const fromSel = document.getElementById('conv-from');
+        const toSel = document.getElementById('conv-to');
+        const input = document.getElementById('conv-input');
+        const result = document.getElementById('conv-result');
+        const fillUnits = () => {
+            const type = typeSel.value;
+            const keys = Object.keys(units[type]);
+            fromSel.innerHTML = keys.map(k => `<option value="${k}">${k}</option>`).join('');
+            toSel.innerHTML = keys.map(k => `<option value="${k}">${k}</option>`).join('');
+            if (keys.length > 1) toSel.value = keys[1];
+            convert();
+        };
+        const convert = () => {
+            const type = typeSel.value;
+            const val = parseFloat(input.value);
+            if (isNaN(val)) { result.innerText = '—'; return; }
+            const from = fromSel.value, to = toSel.value;
+            let out;
+            if (type === 'suhu') {
+                let c;
+                if (from === 'C') c = val;
+                else if (from === 'F') c = (val - 32) * 5 / 9;
+                else c = val - 273.15;
+                if (to === 'C') out = c;
+                else if (to === 'F') out = c * 9 / 5 + 32;
+                else out = c + 273.15;
+            } else {
+                out = (val * units[type][from]) / units[type][to];
+            }
+            result.innerText = `${val} ${from} = ${Number(out.toFixed(6))} ${to}`;
+        };
+        typeSel.onchange = () => { fillUnits(); playBeep(); };
+        fromSel.onchange = convert; toSel.onchange = convert; input.oninput = convert;
+        document.getElementById('conv-swap').onclick = () => {
+            playBeep();
+            const tmp = fromSel.value; fromSel.value = toSel.value; toSel.value = tmp; convert();
+        };
+        fillUnits();
+    }
+};
+
+TOOLS.periodik = {
+    name: 'Tabel Periodik',
+    render: () => `
+        <p class="modal-tool-sub">20 unsur pertama. Klik untuk info.</p>
+        <div class="element-grid" id="element-grid"></div>
+        <div class="result-box" id="element-info" style="margin-top:12px;">Pilih unsur</div>
+    `,
+    init: () => {
+        const elements = [
+            ['H','Hidrogen',1,'1.008'],['He','Helium',2,'4.003'],
+            ['Li','Litium',3,'6.94'],['Be','Berilium',4,'9.012'],
+            ['B','Boron',5,'10.81'],['C','Karbon',6,'12.01'],
+            ['N','Nitrogen',7,'14.01'],['O','Oksigen',8,'16.00'],
+            ['F','Fluor',9,'19.00'],['Ne','Neon',10,'20.18'],
+            ['Na','Natrium',11,'22.99'],['Mg','Magnesium',12,'24.31'],
+            ['Al','Aluminium',13,'26.98'],['Si','Silikon',14,'28.09'],
+            ['P','Fosfor',15,'30.97'],['S','Sulfur',16,'32.06'],
+            ['Cl','Klorin',17,'35.45'],['Ar','Argon',18,'39.95'],
+            ['K','Kalium',19,'39.10'],['Ca','Kalsium',20,'40.08']
+        ];
+        const grid = document.getElementById('element-grid');
+        const info = document.getElementById('element-info');
+        grid.innerHTML = elements.map((e, i) => `
+            <div class="element-cell" data-idx="${i}">
+                <div class="num">${e[2]}</div>
+                <span class="sym">${e[0]}</span>
+                <div class="name">${e[1]}</div>
+            </div>
+        `).join('');
+        grid.onclick = (ev) => {
+            const cell = ev.target.closest('.element-cell');
+            if (!cell) return;
+            playBeep();
+            const e = elements[parseInt(cell.dataset.idx)];
+            info.innerHTML = `<strong>${e[1]} (${e[0]})</strong><br>Nomor atom: ${e[2]} • Massa: ${e[3]}`;
+        };
+    }
+};
+
+TOOLS.pdf = {
+    name: 'Pembaca PDF',
+    render: () => `
+        <p class="modal-tool-sub">Pilih file PDF dari perangkatmu.</p>
+        <input type="file" id="pdf-file" accept="application/pdf">
+        <div id="pdf-info">${emptyState(ICO.book, 'Belum ada file')}</div>
+        <a id="pdf-open" class="btn-main" style="display:none; text-align:center; text-decoration:none; padding:12px;" target="_blank">Buka PDF</a>
+    `,
+    init: () => {
+        document.getElementById('pdf-file').onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            playBeep();
+            if (file.type !== 'application/pdf') { showToast('Bukan file PDF'); return; }
+            const url = URL.createObjectURL(file);
+            document.getElementById('pdf-info').innerHTML =
+                `<div class="list-item"><span>${escapeHtml(file.name)}</span><span style="color:var(--text-sub); font-size:0.7rem;">${(file.size/1024).toFixed(1)} KB</span></div>`;
+            const openBtn = document.getElementById('pdf-open');
+            openBtn.href = url; openBtn.style.display = 'flex';
+            showToast('PDF siap dibuka');
+        };
+    }
+};
+
+TOOLS.katakata = {
+    name: 'Hitung Kata',
+    render: () => `
+        <p class="modal-tool-sub">Hitung kata, karakter, dan kalimat.</p>
+        <textarea id="kk-text" placeholder="Tulis atau tempel teks di sini..."></textarea>
+        <div class="result-box" id="kk-result">0 kata • 0 karakter • 0 kalimat</div>
+    `,
+    init: () => {
+        const text = document.getElementById('kk-text');
+        const result = document.getElementById('kk-result');
+        const update = () => {
+            const t = text.value;
+            const words = t.trim() ? t.trim().split(/\s+/).length : 0;
+            const chars = t.length;
+            const sentences = t.trim() ? (t.match(/[.!?]+/g) || []).length || 1 : 0;
+            result.innerText = `${words} kata • ${chars} karakter • ${sentences} kalimat`;
+        };
+        text.oninput = update; update();
+    }
+};
+
+TOOLS.stopwatch = {
+    name: 'Stopwatch',
+    render: () => `
+        <p class="modal-tool-sub">Ukur waktu dengan presisi.</p>
+        <div class="timer-display" id="sw-display">00:00:00.00</div>
+        <button class="btn-main" id="sw-toggle">${svgIco(ICO.play)} Mulai</button>
+        <button class="btn-secondary" id="sw-lap">Lap</button>
+        <button class="btn-danger" id="sw-reset">${svgIco(ICO.reset)} Reset</button>
+        <div id="sw-laps" style="margin-top:12px;"></div>
+    `,
+    init: () => {
+        let startTime = 0, elapsed = 0, running = false, intervalId = null;
+        const display = document.getElementById('sw-display');
+        const toggle = document.getElementById('sw-toggle');
+        const laps = [];
+        const lapsEl = document.getElementById('sw-laps');
+        const fmt = (ms) => {
+            const totalSec = Math.floor(ms / 1000);
+            const h = Math.floor(totalSec / 3600);
+            const m = Math.floor((totalSec % 3600) / 60);
+            const s = totalSec % 60;
+            const cs = Math.floor((ms % 1000) / 10);
+            return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(cs).padStart(2,'0')}`;
+        };
+        const render = () => {
+            display.innerText = fmt(elapsed);
+            display.classList.toggle('running', running);
+        };
+        const tick = () => { elapsed = Date.now() - startTime; render(); };
+        toggle.onclick = () => {
+            playBeep();
+            if (running) {
+                clearInterval(intervalId);
+                activeTimers = activeTimers.filter(id => id !== intervalId);
+                running = false;
+                toggle.innerHTML = svgIco(ICO.play) + ' Lanjut';
+            } else {
+                startTime = Date.now() - elapsed;
+                running = true;
+                toggle.innerHTML = svgIco(ICO.pause) + ' Jeda';
+                intervalId = setInterval(tick, 50);
+                activeTimers.push(intervalId);
+            }
+            render();
+        };
+        document.getElementById('sw-lap').onclick = () => {
+            if (!running) return;
+            playBeep();
+            laps.push(elapsed);
+            lapsEl.innerHTML = laps.map((l, i) => `
+                <div class="list-item"><span>Lap ${i+1}</span><span>${fmt(l)}</span></div>
+            `).join('');
+        };
+        document.getElementById('sw-reset').onclick = () => {
+            playBeep();
+            clearInterval(intervalId);
+            activeTimers = activeTimers.filter(id => id !== intervalId);
+            running = false; elapsed = 0; laps.length = 0;
+            lapsEl.innerHTML = '';
+            toggle.innerHTML = svgIco(ICO.play) + ' Mulai';
+            render();
+        };
+        render();
+    }
+};
+
+TOOLS.rumus = {
+    name: 'Rumus Matematika',
+    render: () => `
+        <p class="modal-tool-sub">Kumpulan rumus penting.</p>
+        <div style="max-height: 60vh; overflow-y:auto;">
+            ${[
+                ['Luas Persegi','L = s × s'],
+                ['Luas Persegi Panjang','L = p × l'],
+                ['Luas Segitiga','L = ½ × a × t'],
+                ['Luas Lingkaran','L = π × r²'],
+                ['Keliling Lingkaran','K = 2 × π × r'],
+                ['Rumus ABC','x = (-b ± √(b² - 4ac)) / 2a'],
+                ['Teorema Pythagoras','c² = a² + b²'],
+                ['Volume Kubus','V = s³'],
+                ['Volume Balok','V = p × l × t']
+            ].map(r => `
+                <div class="card" style="padding:12px; margin-bottom:8px;">
+                    <strong style="font-size:0.9rem;">${r[0]}</strong>
+                    <p style="font-size:0.8rem; color:var(--text-sub); margin-top:2px;">${r[1]}</p>
+                </div>
+            `).join('')}
+        </div>
+    `,
+    init: () => {}
+};
+
+TOOLS.tabungan = {
+    name: 'Tabungan Kas',
+    render: () => `
+        <p class="modal-tool-sub">Catat pemasukan tabunganmu.</p>
+        <input type="text" id="tab-name" placeholder="Keterangan (mis. Uang saku)" maxlength="60">
+        <input type="number" id="tab-amount" placeholder="Jumlah (Rp)" min="0">
+        <button class="btn-main" id="tab-add">${svgIco(ICO.plus)} Tambah</button>
+        <div class="result-box" id="tab-total">Total: Rp 0</div>
+        <div id="tab-list"></div>
+    `,
+    init: () => {
+        const listEl = document.getElementById('tab-list');
+        const totalEl = document.getElementById('tab-total');
+        const render = () => {
+            const total = state.savings.reduce((s, x) => s + x.amount, 0);
+            totalEl.innerText = 'Total: Rp ' + total.toLocaleString('id-ID');
+            if (!state.savings.length) {
+                listEl.innerHTML = emptyState(ICO.money, 'Belum ada catatan');
+                return;
+            }
+            listEl.innerHTML = state.savings.map((s, i) => `
+                <div class="list-item">
+                    <span style="flex:1;">${escapeHtml(s.name)}</span>
+                    <span style="color:var(--primary); font-weight:800;">Rp ${s.amount.toLocaleString('id-ID')}</span>
+                    <button class="del-btn" onclick="tabDelete(${i})">Hapus</button>
+                </div>
+            `).join('');
+        };
+        window.tabDelete = (i) => {
+            if (!confirm('Hapus catatan ini?')) return;
+            state.savings.splice(i, 1); saveData(); render();
+        };
+        document.getElementById('tab-add').onclick = () => {
+            const name = document.getElementById('tab-name').value.trim();
+            const amount = parseFloat(document.getElementById('tab-amount').value);
+            if (!name || isNaN(amount) || amount <= 0) { showToast('Isi nama & jumlah'); return; }
+            playBeep();
+            state.savings.push({ name, amount });
+            saveData();
+            document.getElementById('tab-name').value = '';
+            document.getElementById('tab-amount').value = '';
+            render(); showToast('Tabungan ditambahkan');
+        };
+        render();
+    }
+};
+
+TOOLS.papan = {
+    name: 'Foto Papan Tulis',
+    render: () => `
+        <p class="modal-tool-sub">Unggah atau ambil foto papan tulis.</p>
+        <input type="file" id="papan-file" accept="image/*" capture="environment">
+        <div id="papan-preview">${emptyState(ICO.cam, 'Belum ada foto')}</div>
+    `,
+    init: () => {
+        document.getElementById('papan-file').onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            playBeep();
+            const url = URL.createObjectURL(file);
+            document.getElementById('papan-preview').innerHTML = `<img src="${url}" class="file-preview" alt="Papan tulis">`;
+            showToast('Foto dimuat');
+        };
+    }
+};
+
+TOOLS.rak = {
+    name: 'Rak Buku',
+    render: () => `
+        <p class="modal-tool-sub">Daftar buku bacaanmu.</p>
+        <input type="text" id="book-title" placeholder="Judul buku" maxlength="80">
+        <input type="text" id="book-author" placeholder="Penulis" maxlength="60">
+        <button class="btn-main" id="book-add">${svgIco(ICO.plus)} Tambah Buku</button>
+        <div id="book-list" style="margin-top:12px;"></div>
+    `,
+    init: () => {
+        const listEl = document.getElementById('book-list');
+        const render = () => {
+            if (!state.books.length) {
+                listEl.innerHTML = emptyState(ICO.book, 'Rak masih kosong');
+                return;
+            }
+            listEl.innerHTML = state.books.map((b, i) => `
+                <div class="list-item">
+                    <div style="flex:1;">
+                        <strong>${escapeHtml(b.title)}</strong><br>
+                        <span style="color:var(--text-sub); font-size:0.75rem;">${escapeHtml(b.author)}</span>
+                    </div>
+                    <button class="del-btn" onclick="bookDelete(${i})">Hapus</button>
+                </div>
+            `).join('');
+        };
+        window.bookDelete = (i) => {
+            if (!confirm('Hapus buku ini?')) return;
+            state.books.splice(i, 1); saveData(); render();
+        };
+        document.getElementById('book-add').onclick = () => {
+            const title = document.getElementById('book-title').value.trim();
+            const author = document.getElementById('book-author').value.trim() || '—';
+            if (!title) { showToast('Isi judul buku'); return; }
+            playBeep();
+            state.books.push({ title, author });
+            saveData();
+            document.getElementById('book-title').value = '';
+            document.getElementById('book-author').value = '';
+            render(); showToast('Buku ditambahkan');
+        };
+        render();
+    }
+};
+
+TOOLS.piket = {
+    name: 'Jadwal Piket',
+    render: () => `
+        <p class="modal-tool-sub">Atur jadwal piket per hari.</p>
+        <div class="day-tab" id="piket-days">
+            <button data-day="senin" class="active">Sen</button>
+            <button data-day="selasa">Sel</button>
+            <button data-day="rabu">Rab</button>
+            <button data-day="kamis">Kam</button>
+            <button data-day="jumat">Jum</button>
+            <button data-day="sabtu">Sab</button>
+            <button data-day="minggu">Min</button>
+        </div>
+        <input type="text" id="piket-name" placeholder="Nama petugas" maxlength="40">
+        <button class="btn-main" id="piket-add">${svgIco(ICO.plus)} Tambah</button>
+        <div id="piket-list" style="margin-top:12px;"></div>
+    `,
+    init: () => {
+        let currentDay = 'senin';
+        const listEl = document.getElementById('piket-list');
+        const render = () => {
+            const arr = state.piket[currentDay] || [];
+            if (!arr.length) {
+                listEl.innerHTML = emptyState(ICO.trash, 'Belum ada petugas');
+                return;
+            }
+            listEl.innerHTML = arr.map((n, i) => `
+                <div class="list-item">
+                    <span style="flex:1;">${escapeHtml(n)}</span>
+                    <button class="del-btn" onclick="piketDelete(${i})">Hapus</button>
+                </div>
+            `).join('');
+        };
+        window.piketDelete = (i) => {
+            state.piket[currentDay].splice(i, 1); saveData(); render();
+        };
+        document.getElementById('piket-days').onclick = (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            playBeep();
+            currentDay = btn.dataset.day;
+            document.querySelectorAll('#piket-days button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            render();
+        };
+        document.getElementById('piket-add').onclick = () => {
+            const name = document.getElementById('piket-name').value.trim();
+            if (!name) { showToast('Isi nama'); return; }
+            playBeep();
+            if (!state.piket[currentDay]) state.piket[currentDay] = [];
+            state.piket[currentDay].push(name);
+            saveData();
+            document.getElementById('piket-name').value = '';
+            render(); showToast('Petugas ditambahkan');
+        };
+        render();
+    }
+};
+
+TOOLS.mindmap = {
+    name: 'Mindmap',
+    render: () => `
+        <p class="modal-tool-sub">Topik utama + cabang pikiran.</p>
+        <input type="text" id="mm-center" placeholder="Topik utama" maxlength="60" value="${escapeHtml(state.mindmap.center || '')}">
+        <button class="btn-secondary" id="mm-save-center">${svgIco(ICO.save)} Simpan Topik</button>
+        <input type="text" id="mm-branch" placeholder="Cabang baru..." maxlength="60" style="margin-top:12px;">
+        <button class="btn-main" id="mm-add">${svgIco(ICO.plus)} Tambah Cabang</button>
+        <div id="mm-display" style="margin-top:16px;"></div>
+    `,
+    init: () => {
+        const display = document.getElementById('mm-display');
+        const render = () => {
+            if (!state.mindmap.center && !state.mindmap.branches.length) {
+                display.innerHTML = emptyState(ICO.brain, 'Belum ada mindmap');
+                return;
+            }
+            display.innerHTML = `
+                <div style="background:linear-gradient(135deg,#7c3aed,#ec4899); color:white; padding:14px; border-radius:12px; text-align:center; font-weight:800; margin-bottom:8px; box-shadow:0 4px 12px rgba(124,58,237,0.3);">
+                    ${escapeHtml(state.mindmap.center || 'Topik Utama')}
+                </div>
+                ${state.mindmap.branches.map((b, i) => `
+                    <div class="list-item" style="margin-left:12px;">
+                        <span style="flex:1;">${escapeHtml(b)}</span>
+                        <button class="del-btn" onclick="mmDelete(${i})">Hapus</button>
+                    </div>
+                `).join('')}
+            `;
+        };
+        window.mmDelete = (i) => {
+            state.mindmap.branches.splice(i, 1); saveData(); render();
+        };
+        document.getElementById('mm-save-center').onclick = () => {
+            playBeep();
+            state.mindmap.center = document.getElementById('mm-center').value.trim();
+            saveData(); render(); showToast('Topik disimpan');
+        };
+        document.getElementById('mm-add').onclick = () => {
+            const b = document.getElementById('mm-branch').value.trim();
+            if (!b) { showToast('Isi cabang'); return; }
+            playBeep();
+            state.mindmap.branches.push(b);
+            saveData();
+            document.getElementById('mm-branch').value = '';
+            render(); showToast('Cabang ditambahkan');
+        };
+        render();
+    }
+};
+
+TOOLS.kamus = {
+    name: 'Kamus Sains',
+    render: () => `
+        <p class="modal-tool-sub">Istilah sains populer.</p>
+        <input type="text" id="kamus-search" placeholder="Cari istilah...">
+        <div id="kamus-list" style="margin-top:10px;"></div>
+    `,
+    init: () => {
+        const entries = [
+            ['Fotosintesis', 'Proses tumbuhan membuat makanan menggunakan cahaya matahari.'],
+            ['Mitosis', 'Pembelahan sel menghasilkan 2 sel identik.'],
+            ['Meiosis', 'Pembelahan sel menghasilkan 4 sel gamet.'],
+            ['Osmosis', 'Perpindahan air melalui membran semipermeabel.'],
+            ['Difusi', 'Perpindahan partikel dari konsentrasi tinggi ke rendah.'],
+            ['Enzim', 'Protein katalis yang mempercepat reaksi biokimia.'],
+            ['DNA', 'Molekul pembawa informasi genetik.'],
+            ['Atom', 'Unit terkecil materi yang masih punya sifat unsur.'],
+            ['Molekul', 'Gabungan dua atau lebih atom.'],
+            ['Gravitasi', 'Gaya tarik antara benda bermassa.'],
+            ['Energi Kinetik', 'Energi yang dimiliki benda bergerak.'],
+            ['Energi Potensial', 'Energi tersimpan karena posisi atau keadaan.'],
+            ['Reaksi Eksoterm', 'Reaksi yang melepaskan kalor.'],
+            ['Reaksi Endoterm', 'Reaksi yang menyerap kalor.'],
+            ['Ekosistem', 'Hubungan makhluk hidup dengan lingkungannya.']
+        ];
+        const listEl = document.getElementById('kamus-list');
+        const render = (filter = '') => {
+            const q = filter.toLowerCase();
+            const filtered = entries.filter(e => e[0].toLowerCase().includes(q) || e[1].toLowerCase().includes(q));
+            if (!filtered.length) {
+                listEl.innerHTML = emptyState(ICO.book, 'Tidak ditemukan');
+                return;
+            }
+            listEl.innerHTML = filtered.map(e => `
+                <div class="card" style="padding:12px; margin-bottom:8px;">
+                    <strong style="color:var(--primary);">${escapeHtml(e[0])}</strong>
+                    <p style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;">${escapeHtml(e[1])}</p>
+                </div>
+            `).join('');
+        };
+        document.getElementById('kamus-search').oninput = (e) => render(e.target.value);
+        render();
+    }
+};
+
+TOOLS.seragam = {
+    name: 'Checklist Seragam',
+    render: () => `
+        <p class="modal-tool-sub">Centang perlengkapan seragammu.</p>
+        <div id="seragam-list"></div>
+        <div class="result-box" id="seragam-status">0 / 0 siap</div>
+    `,
+    init: () => {
+        const items = ['Baju Putih', 'Baju Batik', 'Baju Pramuka', 'Baju Olahraga', 'Dasi', 'Topi', 'Sepatu', 'Kaos Kaki', 'Sabuk'];
+        const listEl = document.getElementById('seragam-list');
+        const statusEl = document.getElementById('seragam-status');
+        const render = () => {
+            listEl.innerHTML = items.map(it => {
+                const checked = state.seragam[it] || false;
+                return `<div class="check-item ${checked ? 'done' : ''}">
+                    <input type="checkbox" data-item="${escapeHtml(it)}" ${checked ? 'checked' : ''}>
+                    <label>${escapeHtml(it)}</label>
+                </div>`;
+            }).join('');
+            const done = items.filter(it => state.seragam[it]).length;
+            statusEl.innerText = `${done} / ${items.length} siap`;
+            listEl.querySelectorAll('input[type=checkbox]').forEach(cb => {
+                cb.onchange = () => {
+                    playBeep();
+                    state.seragam[cb.dataset.item] = cb.checked;
+                    saveData();
+                    render();
+                };
+            });
+        };
+        render();
+    }
+};
+
+TOOLS.hujan = {
+    name: 'Audio Ambience Hujan',
+    render: () => `
+        <p class="modal-tool-sub">Suara hujan untuk relaksasi belajar.</p>
+        <div class="result-box" id="rain-status">Audio mati</div>
+        <button class="btn-main" id="rain-toggle">${svgIco(ICO.volume)} Putar Suara Hujan</button>
+        <div class="volume-row">
+            <span style="font-size:0.75rem; color:var(--text-sub); font-weight:700;">Volume</span>
+            <input type="range" id="rain-volume" min="0" max="1" step="0.01" value="0.3">
+        </div>
+    `,
+    init: () => {
+        const status = document.getElementById('rain-status');
+        const toggle = document.getElementById('rain-toggle');
+        const vol = document.getElementById('rain-volume');
+        let playing = false;
+
+        const startRain = () => {
+            if (rainCtx) return;
+            rainCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const bufferSize = 2 * rainCtx.sampleRate;
+            const buffer = rainCtx.createBuffer(1, bufferSize, rainCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            let lastOut = 0;
+            for (let i = 0; i < bufferSize; i++) {
+                const white = Math.random() * 2 - 1;
+                data[i] = (lastOut + 0.02 * white) / 1.02;
+                lastOut = data[i];
+                data[i] *= 3.5;
+            }
+            rainSource = rainCtx.createBufferSource();
+            rainSource.buffer = buffer;
+            rainSource.loop = true;
+            const filter = rainCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 1400;
+            rainGain = rainCtx.createGain();
+            rainGain.gain.value = parseFloat(vol.value);
+            rainSource.connect(filter);
+            filter.connect(rainGain);
+            rainGain.connect(rainCtx.destination);
+            rainSource.start();
+        };
+
+        toggle.onclick = () => {
+            playBeep();
+            if (playing) {
+                stopRain();
+                playing = false;
+                toggle.innerHTML = svgIco(ICO.volume) + ' Putar Suara Hujan';
+                status.innerText = 'Audio mati';
+            } else {
+                try {
+                    startRain();
+                    playing = true;
+                    toggle.innerHTML = svgIco(ICO.pause) + ' Hentikan Suara';
+                    status.innerText = 'Audio menyala';
+                } catch (e) {
+                    showToast('Browser tidak mendukung audio');
+                }
+            }
+        };
+
+        vol.oninput = () => {
+            if (rainGain) rainGain.gain.value = parseFloat(vol.value);
+        };
+        status.innerText = 'Audio mati';
+    }
+};
+
+function stopRain() {
+    if (rainSource) {
+        try { rainSource.stop(); } catch (e) {}
+        rainSource = null;
+    }
+    if (rainCtx) {
+        try { rainCtx.close(); } catch (e) {}
+        rainCtx = null;
+    }
+    rainGain = null;
+}
+
+TOOLS.ujian = {
+    name: 'Simulasi Ujian',
+    render: () => `
+        <p class="modal-tool-sub">5 soal pilihan ganda.</p>
+        <div id="quiz-container"></div>
+        <button class="btn-main" id="quiz-submit" style="margin-top:12px;">${svgIco(ICO.check)} Periksa Jawaban</button>
+        <div class="result-box" id="quiz-result" style="display:none;"></div>
+    `,
+    init: () => {
+        const questions = [
+            { q: 'Ibu kota Indonesia adalah...', opts: ['Bandung', 'Jakarta', 'Surabaya', 'Medan'], a: 1 },
+            { q: 'Hasil dari 7 × 8 adalah...', opts: ['54', '56', '48', '64'], a: 1 },
+            { q: 'Planet terdekat dari Matahari adalah...', opts: ['Venus', 'Bumi', 'Merkurius', 'Mars'], a: 2 },
+            { q: 'Rumus kimia air adalah...', opts: ['CO₂', 'H₂O', 'NaCl', 'O₂'], a: 1 },
+            { q: 'Proklamasi Kemerdekaan RI dibacakan pada...', opts: ['17 Agustus 1945', '1 Juni 1945', '28 Oktober 1928', '10 November 1945'], a: 0 }
+        ];
+        const container = document.getElementById('quiz-container');
+        const answers = new Array(questions.length).fill(-1);
+
+        const render = () => {
+            container.innerHTML = questions.map((q, qi) => `
+                <div class="card" style="margin-bottom:10px;">
+                    <p style="font-weight:700; font-size:0.85rem; margin-bottom:8px;">${qi+1}. ${escapeHtml(q.q)}</p>
+                    ${q.opts.map((o, oi) => `
+                        <button class="quiz-option ${answers[qi] === oi ? 'selected' : ''}" data-q="${qi}" data-o="${oi}">
+                            ${String.fromCharCode(65 + oi)}. ${escapeHtml(o)}
+                        </button>
+                    `).join('')}
+                </div>
+            `).join('');
+            container.querySelectorAll('.quiz-option').forEach(btn => {
+                btn.onclick = () => {
+                    playBeep();
+                    answers[parseInt(btn.dataset.q)] = parseInt(btn.dataset.o);
+                    render();
+                };
+            });
+        };
+
+        document.getElementById('quiz-submit').onclick = () => {
+            playBeep();
+            let score = 0;
+            questions.forEach((q, i) => { if (answers[i] === q.a) score++; });
+            const resultEl = document.getElementById('quiz-result');
+            resultEl.style.display = 'block';
+            resultEl.innerText = `Skor: ${score} / ${questions.length} (${Math.round(score/questions.length*100)})`;
+            container.querySelectorAll('.quiz-option').forEach(btn => {
+                const q = parseInt(btn.dataset.q);
+                const o = parseInt(btn.dataset.o);
+                btn.classList.remove('correct', 'wrong');
+                if (o === questions[q].a) btn.classList.add('correct');
+                else if (answers[q] === o) btn.classList.add('wrong');
+            });
+            if (score >= 4) showToast('Hebat!');
+            else if (score >= 3) showToast('Bagus, tingkatkan lagi!');
+            else showToast('Belajar lagi ya!');
+        };
+
+        render();
+    }
+};
+
+/* =========================================================
+   VIVO 1820 FIX — dipasang setelah semua inisialisasi.
+   Cuma menambahkan setup ulang event & fallback untuk
+   browser lama. TIDAK mengubah TOOLS, state, atau UI.
+   ========================================================= */
+function applyVivoFix() {
+    try {
+        // 1. Paksa bottom-nav & nav-item bisa diklik
+        var nav = document.querySelector('.bottom-nav');
+        if (nav) {
+            nav.style.position = 'fixed';
+            nav.style.bottom = '0';
+            nav.style.left = '0';
+            nav.style.right = '0';
+            nav.style.zIndex = '999999';
+            nav.style.background = '#ffffff';
+            nav.style.display = 'flex';
+            nav.style.flexDirection = 'row';
+            nav.style.pointerEvents = 'auto';
+        }
+
+        // 2. Tiap nav-item: paksa pointer-event & pasang listener
+        //    eksplisit (untuk browser lama yang event bubbling-nya aneh)
+        var views = ['view-beranda', 'view-belajar', 'view-tool', 'view-info'];
+        var items = document.querySelectorAll('.nav-item');
+        for (var i = 0; i < items.length; i++) {
+            (function(idx) {
+                var btn = items[idx];
+                btn.style.pointerEvents = 'auto';
+                btn.style.zIndex = '1000000';
+                btn.style.visibility = 'visible';
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+
+                // Hapus onclick lama, ganti dengan yang lebih stabil
+                btn.onclick = null;
+                btn.addEventListener('click', function(ev) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    switchMainView(views[idx], btn);
+                }, true);
+            })(i);
+        }
+
+        // 3. Content jangan overlap nav
+        var content = document.querySelector('.content-area');
+        if (content) content.style.paddingBottom = '90px';
+
+        console.log('[VIVO FIX] Nav di-reset untuk browser lama.');
+    } catch (e) {
+        console.warn('[VIVO FIX] Gagal apply:', e);
+    }
+}
+
+// Jalankan setelah DOM siap + delay sedikit untuk browser lambat
+setTimeout(applyVivoFix, 300);
+window.addEventListener('load', applyVivoFix);
+
+/* =========================================================
+   INIT
+   ========================================================= */
+/* =========================================================
+   REAL-TIME: Jam, Sapaan, Pelajaran Otomatis
+   ========================================================= */
+const JADWAL_HARIAN = {
+    1: { mapel: 'Matematika',      jam: '07.00 - 08.30', ruang: 'Ruang B1' },
+    2: { mapel: 'TIK',             jam: '07.00 - 08.30', ruang: 'Lab Komputer' },
+    3: { mapel: 'Matematika',      jam: '07.00 - 08.30', ruang: 'Ruang B1' },
+    4: { mapel: 'IPS',             jam: '07.00 - 08.30', ruang: 'Ruang B2' },
+    5: { mapel: 'Agama',           jam: '07.00 - 08.30', ruang: 'Ruang A1' },
+    6: { mapel: 'PJOK', jam: '07.00 - 09.00', ruang: 'Lapangan' }
+};
+
+function getGreeting(hour) {
+    if (hour >= 4 && hour < 11) return 'Selamat pagi';
+    if (hour >= 11 && hour < 15) return 'Selamat siang';
+    if (hour >= 15 && hour < 18) return 'Selamat sore';
+    return 'Selamat malam';
+}
+
+function updateLiveClock() {
+    const now = new Date();
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+
+    const clockEl = document.getElementById('live-clock');
+    if (clockEl) clockEl.innerText = hh + ':' + mm + ':' + ss;
+
+    const mapelEl = document.getElementById('beranda-mapel');
+    const jamEl = document.getElementById('beranda-jam');
+    const ruangEl = document.getElementById('beranda-ruang');
+
+    if (mapelEl && jamEl && ruangEl) {
+        const day = now.getDay();
+        const jadwal = JADWAL_HARIAN[day];
+        if (jadwal) {
+            mapelEl.innerText = jadwal.mapel;
+            jamEl.innerText = jadwal.jam;
+            ruangEl.innerText = jadwal.ruang;
+        } else {
+            mapelEl.innerText = 'Hari Libur';
+            jamEl.innerText = 'Tidak ada kelas';
+            ruangEl.innerText = '-';
+        }
+    }
+
+    const moodEl = document.getElementById('mood-text');
+    if (moodEl && !moodEl.dataset.greeted) {
+        const g = getGreeting(now.getHours());
+        moodEl.innerText = g + ', Siswa DAFZZ! ' + moodEl.innerText;
+        moodEl.dataset.greeted = '1';
+    }
+}
+
+setInterval(updateLiveClock, 1000);
+updateLiveClock();
+
+/* =========================================================
+   VIVO 1820 FIX (DUPLIKAT DARI ATAS - tetap dipertahankan)
+   ========================================================= */
+function applyVivoFix() {
+    try {
+        var nav = document.querySelector('.bottom-nav');
+        if (nav) {
+            nav.style.position = 'fixed';
+            nav.style.bottom = '0';
+            nav.style.left = '0';
+            nav.style.right = '0';
+            nav.style.zIndex = '999999';
+            nav.style.background = '#ffffff';
+            nav.style.display = 'flex';
+            nav.style.flexDirection = 'row';
+            nav.style.pointerEvents = 'auto';
+        }
+
+        var views = ['view-beranda', 'view-belajar', 'view-tool', 'view-info'];
+        var items = document.querySelectorAll('.nav-item');
+        for (var i = 0; i < items.length; i++) {
+            (function(idx) {
+                var btn = items[idx];
+                btn.style.pointerEvents = 'auto';
+                btn.style.zIndex = '1000000';
+                btn.style.visibility = 'visible';
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+                btn.onclick = null;
+                btn.addEventListener('click', function(ev) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    switchMainView(views[idx], btn);
+                }, true);
+            })(i);
+        }
+
+        var content = document.querySelector('.content-area');
+        if (content) content.style.paddingBottom = '90px';
+
+        console.log('[VIVO FIX] Nav di-reset.');
+    } catch (e) {
+        console.warn('[VIVO FIX] Gagal:', e);
+    }
+}
+setTimeout(applyVivoFix, 300);
+window.addEventListener('load', applyVivoFix);
+
+/* =========================================================
+   INIT
+   ========================================================= */
+/* ============ FITUR JADWAL BARU ============ */
+const JADWAL_DATA = {
+    senin: [{ mapel: 'IPA', jam: '07.00 - 08.30' }, { mapel: 'PKN', jam: '08.30 - 10.00' }, { mapel: 'MTK', jam: '10.00 - 11.30' }],
+    selasa: [{ mapel: 'TIK', jam: '07.00 - 08.30' }, { mapel: 'IPA', jam: '08.30 - 10.00' }, { mapel: 'SBK', jam: '10.00 - 11.30' }],
+    rabu: [{ mapel: 'IPS', jam: '07.00 - 08.30' }, { mapel: 'BK', jam: '08.30 - 10.00' }, { mapel: 'BIN', jam: '10.00 - 11.30' }, { mapel: 'PAI', jam: '11.30 - 13.00' }],
+    kamis: [{ mapel: 'B. Inggris', jam: '07.00 - 08.30' }, { mapel: 'IPS', jam: '08.30 - 10.00' }, { mapel: 'B. Jawa', jam: '10.00 - 11.30' }, { mapel: 'BK', jam: '11.30 - 13.00' }],
+    jumat: [{ mapel: 'MTK', jam: '07.00 - 08.30' }, { mapel: 'BIN', jam: '08.30 - 10.30' }],
+    sabtu: [{ mapel: 'PJOK', jam: '07.00 - 08.30' }, { mapel: 'BTQ', jam: '08.30 - 10.00' }, { mapel: 'B. Inggris', jam: '10.00 - 12.00' }]
+};
+const HARI_IDX = { 0: 'minggu', 1: 'senin', 2: 'selasa', 3: 'rabu', 4: 'kamis', 5: 'jumat', 6: 'sabtu' };
+let hBeranda = null;
+
+function bukaPilihHari() {
+    if (typeof playBeep === 'function') playBeep();
+    let m = document.getElementById('modal-hari');
+    if (!m) {
+        m = document.createElement('div');
+        m.id = 'modal-hari';
+        m.className = 'modal';
+        m.innerHTML = `
+            <div class="modal-content">
+                <h3 class="modal-tool-title">Pilih Hari</h3>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;">
+                    <button class="btn-main" style="background:#ef4444;" onclick="pilihHariBeranda('senin')">Senin</button>
+                    <button class="btn-main" style="background:#f97316;" onclick="pilihHariBeranda('selasa')">Selasa</button>
+                    <button class="btn-main" style="background:#fbbf24;color:#000;" onclick="pilihHariBeranda('rabu')">Rabu</button>
+                    <button class="btn-main" style="background:#10b981;" onclick="pilihHariBeranda('kamis')">Kamis</button>
+                    <button class="btn-main" style="background:#3b82f6;" onclick="pilihHariBeranda('jumat')">Jumat</button>
+                    <button class="btn-main" style="background:#8b5cf6;" onclick="pilihHariBeranda('sabtu')">Sabtu</button>
+                </div>
+                <button class="btn-secondary" style="margin-top:20px;" onclick="document.getElementById('modal-hari').classList.remove('show')">Batal</button>
+            </div>
+        `;
+        document.querySelector('.app-container').appendChild(m);
+        m.addEventListener('click', e => { if (e.target.id === 'modal-hari') m.classList.remove('show'); });
+    }
+    m.classList.add('show');
+}
+
+function pilihHariBeranda(hari) {
+    if (typeof playBeep === 'function') playBeep();
+    hBeranda = hari;
+    updateJadwalBeranda();
+    document.getElementById('modal-hari').classList.remove('show');
+}
+
+function updateJadwalBeranda() {
+    let hKey = hBeranda ? hBeranda : HARI_IDX[new Date().getDay()];
+    let label = hBeranda ? 'Pelajaran Hari ' + hKey.charAt(0).toUpperCase() + hKey.slice(1) : 'Pelajaran Utama Hari Ini';
+
+    const elLabel = document.querySelector('.card-main > span');
+    if (elLabel) elLabel.innerText = label;
+
+    const elMapel = document.getElementById('beranda-mapel');
+    const elJam = document.getElementById('beranda-jam');
+    const elRuang = document.getElementById('beranda-ruang');
+    if (!elMapel) return;
+
+    if (hKey === 'minggu' || !JADWAL_DATA[hKey]) {
+        elMapel.innerText = 'Hari Libur';
+        if (elJam) elJam.innerText = '-';
+        if (elRuang) elRuang.innerText = '-';
+        return;
+    }
+    const utama = JADWAL_DATA[hKey][0];
+    elMapel.innerText = utama.mapel;
+    if (elJam) elJam.innerText = utama.jam;
+    if (elRuang) elRuang.innerText = 'Ruang kelas';
+}
+
+function pilihJadwalHari(hari, btn) {
+    if (typeof playBeep === 'function') playBeep();
+    document.querySelectorAll('#jadwal-day-tabs button').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    const container = document.getElementById('jadwal-detail-container');
+    if (!container) return;
+    const list = JADWAL_DATA[hari];
+    if (!list) return;
+
+    container.innerHTML = list.map(item => `
+        <div class="list-item" style="flex-direction:column;align-items:flex-start;padding:14px 16px;border-left:4px solid var(--primary);">
+            <div style="font-size:1rem;font-weight:800;color:var(--text-main);">${item.mapel}</div>
+            <div style="font-size:0.75rem;font-weight:600;color:var(--text-sub);margin-top:2px;">${item.jam}</div>
+        </div>
+    `).join('');
+}
+
+/* ============ SUNTIK HTML OTOMATIS ============ */
+setTimeout(() => {
+    // 1. Ubah Kartu Beranda
+    const cardMain = document.querySelector('.card-main');
+    if (cardMain) {
+        cardMain.onclick = bukaPilihHari;
+        cardMain.style.cursor = 'pointer';
+        const h2 = cardMain.querySelector('h2');
+        if (h2) h2.id = 'beranda-mapel';
+        const p = cardMain.querySelector('p');
+        if (p) {
+            p.innerHTML = `
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span id="beranda-jam">--</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:8px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                <span id="beranda-ruang">--</span>
+            `;
+        }
+    }
+
+    // 2. Ubah Tab Jadwal di Menu Belajar
+    const subJadwal = document.getElementById('sub-jadwal');
+    if (subJadwal) {
+        subJadwal.innerHTML = `
+            <div class="day-tab" id="jadwal-day-tabs">
+                <button data-day="senin" class="active" onclick="pilihJadwalHari('senin', this)">Senin</button>
+                <button data-day="selasa" onclick="pilihJadwalHari('selasa', this)">Selasa</button>
+                <button data-day="rabu" onclick="pilihJadwalHari('rabu', this)">Rabu</button>
+                <button data-day="kamis" onclick="pilihJadwalHari('kamis', this)">Kamis</button>
+                <button data-day="jumat" onclick="pilihJadwalHari('jumat', this)">Jumat</button>
+                <button data-day="sabtu" onclick="pilihJadwalHari('sabtu', this)">Sabtu</button>
+            </div>
+            <div id="jadwal-detail-container"></div>
+        `;
+    }
+
+    // 3. Jalankan inisialisasi awal
+    updateJadwalBeranda();
+    pilihJadwalHari('senin', document.querySelector('#jadwal-day-tabs button[data-day="senin"]'));
+}, 500);
+
+window.onload = loadData;
+</script>
+</body>
+</html>

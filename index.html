@@ -3004,7 +3004,6 @@ setTimeout(() => {
 
 window.onload = loadData;
 </script>
-
 <!-- ===== TOMBOL CHATBOT BARU — TAMBAHKAN DI SINI ===== -->
 <style>
     .chatbot-float-btn {
@@ -3041,12 +3040,12 @@ window.onload = loadData;
     }
 </style>
 
-<a href="https://belajar-seru.onrender.com/bot.html"
-   class="chatbot-float-btn"
-   target="_blank"
-   rel="noopener noreferrer"
+<!-- TOMBOLNYA SAMA PERSIS, CUMA FUNGSINYA DIGANTI -->
+<a class="chatbot-float-btn"
+   onclick="bukaChat()"
    aria-label="Buka Chatbot"
-   title="Buka Chatbot">
+   title="Buka Chatbot"
+   style="cursor: pointer;">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
          stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
@@ -3055,6 +3054,26 @@ window.onload = loadData;
         <line x1="9" y1="14" x2="15" y2="14"/>
     </svg>
 </a>
+
+<!-- JENDELA CHATBOT (MUNCUL DI DALAM APLIKASI) -->
+<div id="jendelaChat" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 99999;">
+  <div style="position: relative; width: 90%; height: 85%; margin: 5% auto; background: #fff; border-radius: 10px; overflow: hidden;">
+    <button onclick="tutupChat()" style="position: absolute; top: 10px; right: 10px; z-index: 10; background: red; color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer;">X</button>
+    <iframe id="linkBot" src="" style="width: 100%; height: 100%; border: none;"></iframe>
+  </div>
+</div>
+
+<script>
+  function bukaChat() {
+    document.getElementById('jendelaChat').style.display = 'block';
+    document.getElementById('linkBot').src = "https://belajar-seru.onrender.com/bot.html"; 
+  }
+
+  function tutupChat() {
+    document.getElementById('jendelaChat').style.display = 'none';
+    document.getElementById('linkBot').src = ""; 
+  }
+</script>
 <!-- ===== SELESAI ===== -->
 
 </body>
